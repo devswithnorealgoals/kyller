@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
-import './prompt_dialog.dart';
+import './views/new_game.dart';
+import './views/join_game.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,23 +11,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue,
+        primaryColor: Colors.blue
       ),
+      
+      
       home: Home(),
     );
   }
 }
 
 class Home extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,152 +56,6 @@ class Home extends StatelessWidget {
   }
 }
 
-class NewGame extends StatefulWidget {
-  @override
-
-  _NewGameState createState() => _NewGameState();
-}
-
-class _NewGameState extends State<NewGame> {
-  
-  List<PlayerListItem> _players = [];
-
-  void _addPlayer(BuildContext context) {
-    asyncInputDialog(context).then((value) => 
-      checkIfExistsAndAddPlayer(value, context)
-    ).catchError((error) => {
-      print(error)
-    });
-  }
-
-  void checkIfExistsAndAddPlayer(name, context) {
-    if (_players.where((player) => player.key == new Key(name)).length > 0) {
-      print("can't add");
-      print(_players);
-      _addPlayer(context);
-    } else {
-      setState(() {
-        var newPlayer = PlayerListItem(new Key(name), hasDismissed, name);
-        _players.add(newPlayer);
-      });
-      print(_players);
-    }
-  }
-
-  void _removePlayer() {
-    setState(() {
-      _players.removeLast();
-    });
-  }
-  
-  hasDismissed(Key key) {
-    setState(() {
-      _players.removeWhere((player) => player.key == key);
-    });
-    print(_players);
-  }
-  var rng = new Random();
-  @override
-  
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Créer un nouveau jeu"),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            RaisedButton(
-              child: Text('Ajouter un joueur'),
-              onPressed: () {
-                _addPlayer(context);
-            }),
-            RaisedButton(
-              child: Text('Retirer un joueur'),
-              onPressed: () {
-                _removePlayer();
-            }),
-            Expanded(child: 
-             ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: _players.length,
-              itemBuilder: (context, index) => this._buildRow(index)),
-            )
-            ]
-        )
-      ),
-    );
-  }
-  _buildRow(int index) {
-    return _players[index];
-  }
-}
-
-class PlayerListItem extends StatefulWidget {
-  final Key key;
-  final Function(Key) isDismissed;
-  final String name;
-  PlayerListItem(this.key, this.isDismissed, this.name);
-  @override
-  _PlayerListItemState createState() => new _PlayerListItemState();
-}
-
-class _PlayerListItemState extends State<PlayerListItem> {
-  // final index = this.index;
-  @override
-  Widget build(BuildContext context) {
-    return Dismissible(
-      onDismissed: (direction) => { widget.isDismissed(widget.key) },
-      key: widget.key,
-      child: Center(
-        child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            widget.name,
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w800,
-              fontFamily: 'Roboto',
-              letterSpacing: 0.5,
-              fontSize: 20,
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.delete),
-            tooltip: 'Supprimer',
-            onPressed: () {
-              widget.isDismissed(widget.key);
-            },
-          ),
-        ],
-      ),
-      )
-    );
-  }
-}
-
-
-
-class JoinGame extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Rejoindre une partie"),
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
-      ),
-    );
-  }
-}
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);

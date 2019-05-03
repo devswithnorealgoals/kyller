@@ -4,7 +4,7 @@ Future<String> asyncInputDialog(BuildContext context) async {
   String teamName = '';
   return showDialog<String>(
     context: context,
-    barrierDismissible: false, // dialog is dismissible with a tap on the barrier
+    barrierDismissible: true, // dialog is dismissible with a tap on the barrier
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text('Prénom du participant'),
@@ -28,6 +28,12 @@ Future<String> asyncInputDialog(BuildContext context) async {
               Navigator.of(context).pop(teamName);
             },
           ),
+          FlatButton(
+            child: Text('Annuler'),
+            onPressed: () {
+              Navigator.of(context).pop(null);
+            },
+          )
         ],
       );
     },
