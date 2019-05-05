@@ -9,7 +9,6 @@ class MissionsChoice extends StatefulWidget {
 }
 
 class _MissionsChoiceState extends State<MissionsChoice> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,19 +34,16 @@ class _MissionsChoiceState extends State<MissionsChoice> {
               padding: const EdgeInsets.all(20.0),
               children: <Widget>[
                 ListTile(
-                  leading: const Icon(Icons.event_seat),
                   title: const Text('The seat for the narrator'),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.event_seat),
                   title: const Text('The seat for the narrator'),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.event_seat),
                   title: const Text('The seat for the narrator'),
+                  trailing: const Checkbox(value: false)
                 ),
                 ListTile(
-                  leading: const Icon(Icons.event_seat),
                   title: const Text('The seat for the narrator'),
                   onTap: () => {print(widget.players)},
                 ),

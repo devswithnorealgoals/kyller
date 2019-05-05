@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../prompt_dialog.dart';
 import './missions_choice.dart';
+import './name_game.dart';
 import 'dart:math';
 
 
@@ -70,7 +71,7 @@ class _NewGameState extends State<NewGame> {
               onPressed: () {
                 Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MissionsChoice(_players.map((p) => p.name).toList())),
+                MaterialPageRoute(builder: (context) => NameGame(_players.map((p) => p.name).toList())),
               );
             })
             ]),
