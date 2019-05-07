@@ -1,4 +1,4 @@
-package com.example.kyller;
+package com.cousinvic.kyller;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

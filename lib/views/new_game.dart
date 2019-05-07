@@ -66,7 +66,7 @@ class _NewGameState extends State<NewGame> {
             RaisedButton(
               color: Colors.blue,
               textColor: Colors.white,
-              child: Text('Les Missions'),
+              child: Text('Suivant'),
               shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
               onPressed: () {
                 Navigator.push(
