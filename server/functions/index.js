@@ -28,6 +28,7 @@ exports.createGame = functions.https.onRequest((req, res) => {
         if (querySnapshot.docs.length > 0) { 
             res.send({data: { error: 'already_exists', message: 'The game name is already taken' }})
         } else {
+            store.collection('games').add({name})
             res.send({data: { result: 'created', message: 'The game name is not taken' }})
         }
     }).catch(reason => {
@@ -37,6 +38,7 @@ exports.createGame = functions.https.onRequest((req, res) => {
 
   })
 
+<<<<<<< HEAD
 
   buildGame = (players, missions) => {
     let currentPlayer = 0
@@ -65,3 +67,25 @@ exports.createGame = functions.https.onRequest((req, res) => {
     }
     return result
   }
+=======
+fake = (body) => {
+    
+    let name = body.data.name
+    const store = admin.firestore()
+    store.collection('games').where('name', '==', name).get().then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) { 
+            console.warn("exists")
+            // res.send({data: { error: 'already_exists', message: 'The game name is already taken' }})
+        } else {
+            console.warn("add")
+            store.collection('games').add({name})
+            // res.send({data: { result: 'created', message: 'The game name is not taken' }})
+        }
+    }).catch(reason => {
+        console.log(reason)
+        res.send({reason})
+    })
+}
+
+fake({data: {name: "super bienn2"}})
+>>>>>>> Tried changing packages
