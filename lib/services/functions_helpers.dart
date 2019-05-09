@@ -9,7 +9,7 @@ createGame(name) async {
         'name': name
       },
     );
-    print("response");
+    print("responsed");
     print(resp);
   } on CloudFunctionsException catch (e) {
     print('caught firebase functions exception');
