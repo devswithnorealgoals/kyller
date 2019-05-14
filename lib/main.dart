@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './views/new_game.dart';
 import './views/join_game.dart';
 
@@ -48,7 +49,14 @@ class Home extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => JoinGame()),
               );
-            })
+            }),
+            RaisedButton(
+            onPressed: () async {
+              var inst = await SharedPreferences.getInstance();
+              inst.clear();
+            },
+            child: Text('Reset game!'),
+          ),
           ],
         )
       ),

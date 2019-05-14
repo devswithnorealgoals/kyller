@@ -65,7 +65,7 @@ class _NameGameState extends State<NameGame> {
 navigateToGame(dynamic game, BuildContext context) async {
   // obtain shared preferences
   final prefs = await SharedPreferences.getInstance();
-  prefs.setString('currentGame', game["result"]);
+  prefs.setString('currentGameId', game);
   print("go to ${game}");
   Navigator.push(
     context,
