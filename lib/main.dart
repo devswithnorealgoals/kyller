@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './views/new_game.dart';
 import './views/join_game.dart';
+import './views/current_game.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,10 +46,7 @@ class Home extends StatelessWidget {
             RaisedButton(
             child: Text('Rejoindre une partie'),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => JoinGame()),
-              );
+              joinGame(context);
             }),
             RaisedButton(
             onPressed: () async {
@@ -60,6 +58,21 @@ class Home extends StatelessWidget {
           ],
         )
       ),
+    );
+  }
+}
+
+void joinGame(BuildContext context) async {
+  var prefs = await SharedPreferences.getInstance();
+  if (prefs.getString('currentPlayer') != null) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CurrentGame()),
+    );
+  } else {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => JoinGame()),
     );
   }
 }

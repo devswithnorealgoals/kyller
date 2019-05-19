@@ -11,14 +11,15 @@ Future<String> asyncInputDialog(BuildContext context) async {
         content: new Row(
           children: <Widget>[
             new Expanded(
-                child: new TextField(
-              autofocus: true,
-              decoration: new InputDecoration(
-                  labelText: 'Nom', hintText: 'Pedro'),
-              onChanged: (value) {
-                teamName = value;
-              },
-            ))
+              child: new TextField(
+                autofocus: true,
+                decoration: new InputDecoration(
+                    labelText: 'Nom', hintText: 'Pedro'),
+                onChanged: (value) {
+                  teamName = value;
+                },
+              )
+            )
           ],
         ),
         actions: <Widget>[

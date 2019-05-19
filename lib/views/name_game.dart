@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/functions_helpers.dart';
 import '../services/utils.dart';
+import '../services/preferences.dart';
 import './join_game.dart';
 
 class NameGame extends StatefulWidget {
@@ -62,13 +63,15 @@ class _NameGameState extends State<NameGame> {
   }
 }
 
-navigateToGame(dynamic game, BuildContext context) async {
-  // obtain shared preferences
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString('currentGameId', game);
-  print("go to ${game}");
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => JoinGame()),
-  );
+navigateToGame(String game, BuildContext context) async {
+  var set = await setGameId(game);
+  if (set == true) {
+    print("go to ${game}");
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => JoinGame()),
+    );
+  } else {
+    print('error saving game id');
+  }
 }
