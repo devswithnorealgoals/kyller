@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../prompt_dialog.dart';
-import './missions_choice.dart';
 import './name_game.dart';
 import 'dart:math';
 
@@ -51,7 +50,9 @@ class _NewGameState extends State<NewGame> {
       appBar: AppBar(
         title: Text("Les joueurs"),
       ),
-      body: Center(
+      body: Builder(
+        builder: (builderContext) =>
+      Center(
         child: Column(
           children: [
             Row(
@@ -69,10 +70,17 @@ class _NewGameState extends State<NewGame> {
               child: Text('Suivant'),
               shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
               onPressed: () {
-                Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NameGame(_players.map((p) => p.name).toList())),
-              );
+                if (_players.length < 2) {
+                  final snackBar = SnackBar(
+                    content: Text('Il faut au moins 2 joueurs !'),
+                  );
+                  Scaffold.of(builderContext).showSnackBar(snackBar);
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NameGame(_players.map((p) => p.name).toList())),
+                  );
+                }
             })
             ]),
             Expanded(child: 
@@ -84,7 +92,8 @@ class _NewGameState extends State<NewGame> {
             )
             ]
         )
-      ),
+      )
+      ) 
     );
   }
   _buildRow(int index) {
@@ -100,7 +109,7 @@ class PlayerListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      onDismissed: (direction) => { this.isDismissed(this.key) },
+      onDismissed: (direction) => this.isDismissed(this.key),
       key: this.key,
       child: Center(
         child: Row(

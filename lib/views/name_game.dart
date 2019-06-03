@@ -23,7 +23,7 @@ class _NameGameState extends State<NameGame> {
         title: Text("Nom de la partie ?"),
       ),
       body: Builder(
-        builder: (contextOfBuilder) => 
+        builder: (builderContext) => 
       Center(
         child: Column(
           children: [
@@ -46,10 +46,10 @@ class _NameGameState extends State<NameGame> {
                     var game = await createGame(gameNameController.text, widget.players, missions);
                     if (game["result"] != null) { navigateToGame(game["result"], context); } else {
                       final snackBar = SnackBar(
-                      content: Text('Ce nom est déjà pris !'),
-                    );
-                    // Find the Scaffold in the Widget tree and use it to show a SnackBar!
-                    Scaffold.of(contextOfBuilder).showSnackBar(snackBar);
+                        content: Text('Ce nom est déjà pris !'),
+                      );
+                      // Find the Scaffold in the Widget tree and use it to show a SnackBar!
+                      Scaffold.of(builderContext).showSnackBar(snackBar);
                     }
                   }
                 ),

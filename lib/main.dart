@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './views/new_game.dart';
 import './views/join_game.dart';
 import './views/current_game.dart';
+import './services/preferences.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,14 +17,18 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lightBlue,
         primaryColor: Colors.blue
       ),
-      
-      
       home: Home(),
     );
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +49,22 @@ class Home extends StatelessWidget {
               );
             }),
             RaisedButton(
-            child: Text('Rejoindre une partie'),
-            onPressed: () {
-              joinGame(context);
-            }),
+              onPressed: () {
+                joinGame(context);
+              },
+              child: FutureBuilder(
+                future: getGameId(),
+                builder: (context, snapshot)  {
+                  var game = snapshot.data;
+                  return game == null ? Text('Rejoindre une partie') : Text('Partie en cours');
+                }
+              ) 
+            ),
             RaisedButton(
             onPressed: () async {
               var inst = await SharedPreferences.getInstance();
               inst.clear();
+              setState(() {});
             },
             child: Text('Reset game!'),
           ),

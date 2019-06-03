@@ -137,9 +137,11 @@ setGame(gameName) async {
 }
 
 setPlayer(player) async {
+  print(player);
   var prefs = await SharedPreferences.getInstance();
   var playerSet = await prefs.setString('currentPlayer', player['name']);
   var missionSet = await prefs.setString('currentMission', player['mission']);
   var playerToKillSet = await prefs.setString('currentPlayerToKill', player['to_kill']);
-  return playerSet && missionSet && playerToKillSet;
+  var killed = await prefs.setBool('currentKilledState', player['killed']);
+  return playerSet && missionSet && playerToKillSet && killed;
 }
