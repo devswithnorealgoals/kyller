@@ -9,9 +9,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://kyller.firebaseio.com"
 });
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
+
 
 exports.createGame = functions.https.onRequest((req, res) => {
     let name = req.body.data.name
@@ -34,10 +32,16 @@ exports.createGame = functions.https.onRequest((req, res) => {
 
 })
 
-exports.killed = functions.https.onRequest((req, res) => {
-    let gameId = req.body.data.gameId
-    let playerName = req.body.data.playerName
-    let status = req.body.data.status
+exports.killed = functions.https.onCall((data, context) => {
+    console.log(data)
+    // console.log(req.body)
+    // console.log(req.rawBody)
+    let gameId = data.gameId
+    let playerName = data.playerName
+    let status = data.status
+    // let gameId = req.body.data.gameId
+    // let playerName = req.body.data.playerName
+    // let status = req.body.data.status
     const store = admin.firestore()
     store.collection('games').doc(gameId).get().then((game) => {
         var newGameState
@@ -48,7 +52,7 @@ exports.killed = functions.https.onRequest((req, res) => {
             return
         }
         store.collection('games').doc(gameId).update({players:  newGameState}).then(() => {
-            res.send({data: {result: killed(game.data().players, playerName, status), previous: game.data().players}})
+            res.send({data: {result: newGameState, previous: game.data().players}})
         }, (err) => {
             res.send({data: { error: 'could not update game state', message: err }})
         })
@@ -58,21 +62,17 @@ exports.killed = functions.https.onRequest((req, res) => {
 })
 
 killed = (players, playerName, status) => {
-    var player = players.filter((p) => p.name == playerName && p.killed == false)[0]
-    console.log('player', player)
-    var toKill = players.filter((p) => p.name == player.to_kill && p.killed == false)[0]
-    console.log('toKill', toKill)
-    var killBy = players.filter((p) => p.to_kill == playerName && p.killed == false)[0]
-    console.log('killBy', killBy)
-    var killByKillBy = players.filter((p) => p.to_kill == killBy.name && p.killed == false)[0]
-    console.log('killBy', killByKillBy)
-    switch(status) {
+    var player = players.filter((p) => p.name === playerName && p.killed === false)[0]
+    var toKill = players.filter((p) => p.name === player.to_kill && p.killed === false)[0]
+    var killBy = players.filter((p) => p.to_kill === playerName && p.killed === false)[0]
+    var killByKillBy = players.filter((p) => p.to_kill === killBy.name && p.killed === false)[0]
+    switch(status) {
         case 'killed':
         players.map((p) => {
-            if (p.name == toKill.name) {
+            if (p.name === toKill.name) {
                 p.killed = true
             }
-            if (p.name == playerName) {
+            if (p.name === playerName) {
                 p.to_kill = toKill.to_kill
                 p.mission = toKill.mission
             }
@@ -81,10 +81,10 @@ killed = (players, playerName, status) => {
         break;
         case 'got_killed':
         players.map((p) => {
-            if (p.name == playerName) {
+            if (p.name === playerName) {
                 p.killed = true
             }
-            if (p.name == killBy.name) {
+            if (p.name === killBy.name) {
                 p.to_kill = player.to_kill
                 p.mission = player.mission
             }
@@ -93,10 +93,10 @@ killed = (players, playerName, status) => {
         break;
         case 'counter_killed':
         players.map((p) => {
-            if (p.name == killBy.name) {
+            if (p.name === killBy.name) {
                 p.killed = true
             }
-            if (p.name == killByKillBy.name) {
+            if (p.name === killByKillBy.name) {
                 p.to_kill = killBy.to_kill
             }
             return p
@@ -104,10 +104,10 @@ killed = (players, playerName, status) => {
         break;
         case 'got_counter_killed':
         players.map((p) => {
-            if (p.name == playerName) {
+            if (p.name === playerName) {
                 p.killed = true
             }
-            if (p.name == killBy.name) {
+            if (p.name === killBy.name) {
                 p.to_kill = player.to_kill
             }
             return p
@@ -118,7 +118,7 @@ killed = (players, playerName, status) => {
 }
 
 
-  buildGame = (players, missions) => {
+buildGame = (players, missions) => {
     let currentPlayer = 0
     let currentMission
     let firstPlayer = players[0]
@@ -143,8 +143,8 @@ killed = (players, playerName, status) => {
         currentPlayer = playerToKillIndex
         currentMission = missionIndex
         missions.splice(missionIndex, 1)
-    }
+        }
     return result
-  }
+}
 
 

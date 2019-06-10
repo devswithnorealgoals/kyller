@@ -8,6 +8,10 @@ DocumentReference getGameInfos(String docId){
   return Firestore.instance.collection('games').document(docId);
 }
 
+Stream<DocumentSnapshot> getGameSnapshot(String docId) {
+  return Firestore.instance.collection('games').document(docId).snapshots();
+}
+
 Future<QuerySnapshot> getGameInfosByName(String gameName) async {
   return Firestore.instance.collection('games').where('name', isEqualTo: gameName).getDocuments();
 }
