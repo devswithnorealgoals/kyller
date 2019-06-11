@@ -12,11 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
-        primaryColor: Colors.blue
-      ),
+      title: 'Kyller',
+      theme:
+          ThemeData(primarySwatch: Colors.lightBlue, primaryColor: Colors.blue),
       home: Home(),
     );
   }
@@ -24,43 +22,48 @@ class MyApp extends StatelessWidget {
 
 class Home extends StatefulWidget {
   @override
-
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('First Route'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('First Route'),
+      // ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RaisedButton(
-            child: Text('Nouveau Jeu'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NewGame()),
-              );
-            }),
-            RaisedButton(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Image.asset('graphics/target.png'),
+          DecoratedBox(position: DecorationPosition.foreground,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('graphics/target.png')),
+            ),
+          ),
+          RaisedButton(
+              child: Text('Nouveau Jeu'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewGame()),
+                );
+              }),
+          RaisedButton(
               onPressed: () {
                 joinGame(context);
               },
               child: FutureBuilder(
-                future: getGameId(),
-                builder: (context, snapshot)  {
-                  var game = snapshot.data;
-                  return game == null ? Text('Rejoindre une partie') : Text('Partie en cours');
-                }
-              ) 
-            ),
-            RaisedButton(
+                  future: getGameId(),
+                  builder: (context, snapshot) {
+                    var game = snapshot.data;
+                    return game == null
+                        ? Text('Rejoindre une partie')
+                        : Text('Partie en cours');
+                  })),
+          RaisedButton(
             onPressed: () async {
               var inst = await SharedPreferences.getInstance();
               inst.clear();
@@ -68,9 +71,8 @@ class _HomeState extends State<Home> {
             },
             child: Text('Reset game!'),
           ),
-          ],
-        )
-      ),
+        ],
+      )),
     );
   }
 }
@@ -89,7 +91,6 @@ void joinGame(BuildContext context) async {
     );
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);

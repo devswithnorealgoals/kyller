@@ -33,31 +33,24 @@ exports.createGame = functions.https.onRequest((req, res) => {
 })
 
 exports.killed = functions.https.onCall((data, context) => {
-    console.log(data)
-    // console.log(req.body)
-    // console.log(req.rawBody)
     let gameId = data.gameId
     let playerName = data.playerName
     let status = data.status
-    // let gameId = req.body.data.gameId
-    // let playerName = req.body.data.playerName
-    // let status = req.body.data.status
     const store = admin.firestore()
-    store.collection('games').doc(gameId).get().then((game) => {
+    return store.collection('games').doc(gameId).get().then((game) => {
         var newGameState
         try {
             newGameState = killed(game.data().players, playerName, status)
         } catch (e) {
-            res.send({data: { error: 'error in the algorithm', message: e }})
-            return
+            return { error: 'error in the algorithm', message: e }
         }
-        store.collection('games').doc(gameId).update({players:  newGameState}).then(() => {
-            res.send({data: {result: newGameState, previous: game.data().players}})
+        return store.collection('games').doc(gameId).update({players: newGameState}).then(() => {
+            return { new: newGameState, previous: game.data().players}
         }, (err) => {
-            res.send({data: { error: 'could not update game state', message: err }})
+            return {error: 'could not update game state', message: err }
         })
     }, (err) => {
-        res.send({data: { error: 'error getting game', message: err }})
+        return { error: 'error getting game', message: err }
     })
 })
 
