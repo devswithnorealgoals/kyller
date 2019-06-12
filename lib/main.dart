@@ -13,8 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kyller',
-      theme:
-          ThemeData(primarySwatch: Colors.lightBlue, primaryColor: Colors.blue),
+      theme: ThemeData(primarySwatch: Colors.grey, primaryColor: Colors.black),
       home: Home(),
     );
   }
@@ -25,7 +24,25 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  AnimationController animationController;
+  @override
+  void initState() {
+    super.initState();
+    animationController = new AnimationController(
+      vsync: this,
+      duration: new Duration(seconds: 15),
+    );
+
+    print(animationController);
+    animationController.repeat();
+  }
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,43 +51,77 @@ class _HomeState extends State<Home> {
       // ),
       body: Center(
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Image.asset('graphics/target.png'),
-          DecoratedBox(position: DecorationPosition.foreground,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('graphics/target.png')),
+          Padding(
+            padding: EdgeInsets.only(top: 30.0),
+            child: Text(
+              'LE KILLER',
+              style: TextStyle(fontFamily: 'gunplay3d', fontSize: 50.0),
             ),
           ),
-          RaisedButton(
-              child: Text('Nouveau Jeu'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NewGame()),
+          AnimatedBuilder(
+              animation: animationController,
+              child: Container(
+                child: Image.asset(
+                  'assets/images/target.png',
+                  width: MediaQuery.of(context).size.width / 2,
+                ),
+              ),
+              builder: (BuildContext context, Widget _widget) {
+                return new Transform.rotate(
+                  angle: animationController.value * 6.3,
+                  child: _widget,
                 );
               }),
-          RaisedButton(
-              onPressed: () {
-                joinGame(context);
-              },
-              child: FutureBuilder(
-                  future: getGameId(),
-                  builder: (context, snapshot) {
-                    var game = snapshot.data;
-                    return game == null
-                        ? Text('Rejoindre une partie')
-                        : Text('Partie en cours');
-                  })),
-          RaisedButton(
-            onPressed: () async {
-              var inst = await SharedPreferences.getInstance();
-              inst.clear();
-              setState(() {});
-            },
-            child: Text('Reset game!'),
-          ),
+          Container(
+            child: Column(children: [
+              FlatButton(
+                  child: Text(
+                    'NOUVEAU JEU',
+                    style: TextStyle(fontSize: 28.0, fontFamily: 'gunplay', color: Color(0xffF1D302)),
+                  ),
+                  // highlightColor: Colors.amberAccent,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NewGame()),
+                    );
+                  }),
+              FlatButton(
+                  onPressed: () {
+                    joinGame(context);
+                  },
+                  child: FutureBuilder(
+                      future: getGameId(),
+                      builder: (context, snapshot) {
+                        var game = snapshot.data;
+                        return game == null
+                            ? Text('REJOINDRE',
+                                style: TextStyle(
+                                    fontSize: 28.0, fontFamily: 'gunplay'))
+                            : Text('PARTIE EN COURS',
+                                style: TextStyle(
+                                    fontSize: 28.0, fontFamily: 'gunplay'));
+                      })),
+              FutureBuilder(
+                future: getGameId(),
+                builder: (context, snapshot) {
+                 return snapshot.data != null ? 
+                FlatButton(
+                onPressed: () async {
+                  var inst = await SharedPreferences.getInstance();
+                  inst.clear();
+                  setState(() {});
+                },
+                child: Text('QUITTER',
+                    style: TextStyle(fontSize: 28.0, fontFamily: 'gunplay')),
+              ) : FlatButton();
+                } 
+              )
+              ,
+            ]),
+          )
         ],
       )),
     );
