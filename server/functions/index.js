@@ -131,7 +131,8 @@ buildGame = (players, missions) => {
             name,
             to_kill: playerToKill,
             mission: missions[missionIndex],
-            killed: false
+            killed: false,
+            kills: 0
         })
         currentPlayer = playerToKillIndex
         currentMission = missionIndex

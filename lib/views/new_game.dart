@@ -88,7 +88,7 @@ class _NewGameState extends State<NewGame> {
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: _players.length,
-              itemBuilder: (context, index) => this._buildRow(index)),
+              itemBuilder: (context, index) => ClipRect(child: this._buildRow(index),) ),
             )
             ]
         )
