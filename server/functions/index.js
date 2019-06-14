@@ -55,41 +55,46 @@ exports.killed = functions.https.onCall((data, context) => {
 })
 
 killed = (players, playerName, status) => {
-    var player = players.filter((p) => p.name === playerName && p.killed === false)[0]
-    var toKill = players.filter((p) => p.name === player.to_kill && p.killed === false)[0]
-    var killBy = players.filter((p) => p.to_kill === playerName && p.killed === false)[0]
-    var killByKillBy = players.filter((p) => p.to_kill === killBy.name && p.killed === false)[0]
+    var player = players.filter((p) => p.name === playerName && p.killed === false)[0] // soi
+    var toKill = players.filter((p) => p.name === player.to_kill && p.killed === false)[0] // à tuer
+    var killBy = players.filter((p) => p.to_kill === playerName && p.killed === false)[0] // son tueur
+    var killByKillBy = players.filter((p) => p.to_kill === killBy.name && p.killed === false)[0] // le tueur de son tueur
     switch(status) {
         case 'killed':
         players.map((p) => {
-            if (p.name === toKill.name) {
+            if (p.name === toKill.name) { // p = la personne tuée
                 p.killed = true
             }
-            if (p.name === playerName) {
+            if (p.name === playerName) { // p = soi même
                 p.to_kill = toKill.to_kill
                 p.mission = toKill.mission
+                p.kills += 1
             }
             return p
         })
         break;
         case 'got_killed':
         players.map((p) => {
-            if (p.name === playerName) {
+            if (p.name === playerName) { // p = la personne tuée (soi-même)
                 p.killed = true
             }
-            if (p.name === killBy.name) {
+            if (p.name === killBy.name) { // p = son tueur
                 p.to_kill = player.to_kill
                 p.mission = player.mission
+                p.kills += 1
             }
             return p
         })
         break;
         case 'counter_killed':
         players.map((p) => {
-            if (p.name === killBy.name) {
+            if (p.name === playerName) { // soi même
+                p.kills += 1
+            }
+            if (p.name === killBy.name) { // son tueur (tué)
                 p.killed = true
             }
-            if (p.name === killByKillBy.name) {
+            if (p.name === killByKillBy.name) { // le tueur de son tueur
                 p.to_kill = killBy.to_kill
             }
             return p
@@ -97,10 +102,13 @@ killed = (players, playerName, status) => {
         break;
         case 'got_counter_killed':
         players.map((p) => {
-            if (p.name === playerName) {
+            if (p.name === playerName) { // soi même
                 p.killed = true
             }
-            if (p.name === killBy.name) {
+            if (p.name === toKill.name) { // sa cible
+                p.kills += 1
+            }
+            if (p.name === killBy.name) { // son tueur
                 p.to_kill = player.to_kill
             }
             return p

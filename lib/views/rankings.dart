@@ -8,16 +8,43 @@ class Rankings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: players.length,
-      itemBuilder: (context, index) => Text(
-            players[index]['name'],
-            style: TextStyle(
-                color:
-                    players[index]['killed'] == true ? Colors.red : Colors.green),
-          ),
+      padding: EdgeInsets.all(18.0),
+        child: Column(
+      children: <Widget>[
+        Text('CLASSEMENT', style: TextStyle(fontSize: 36.0, fontFamily: 'gunplay'),),
+        ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: players.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                  padding: EdgeInsets.fromLTRB(40.0, 0.0, 16.0, 0.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          flex: 5,
+                          child: Text(
+                            players[index]['name'],
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontFamily: 'gunplay',
+                                fontSize: 20.0,
+                                decoration: players[index]['killed'] == true
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none),
+                          ),
+                        ),
+                        Flexible(
+                            flex: 1,
+                            child: Text(players[index]['kills'].toString(),
+                                style: TextStyle(
+                                  fontFamily: 'gunplay',
+                                  fontSize: 20.0,
+                                )))
+                      ]));
+            })
+      ],
     ));
   }
 }
