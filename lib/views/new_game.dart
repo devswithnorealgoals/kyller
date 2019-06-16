@@ -17,53 +17,72 @@ class _NewGameState extends State<NewGame> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Les joueurs"),
+          title: Text("LES JOUEURS",
+              style: TextStyle(fontSize: 20.0, fontFamily: 'gunplay')),
         ),
         body: Builder(
             builder: (builderContext) => Center(
                     child: Column(children: [
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FlatButton(
-                            textColor: Colors.blue,
-                            child: Text('Ajouter un joueur'),
-                            onPressed: () {
-                              _addPlayer(context);
-                            }),
-                        RaisedButton(
-                            color: Colors.blue,
-                            textColor: Colors.white,
-                            child: Text('Suivant'),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
-                            onPressed: () {
-                              if (_players.length < 2) {
-                                final snackBar = SnackBar(
-                                  content: Text('Il faut au moins 2 joueurs !'),
-                                );
-                                Scaffold.of(builderContext)
-                                    .showSnackBar(snackBar);
-                              } else {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => NameGame(_players
-                                          .map((p) => p.name)
-                                          .toList())),
-                                );
-                              }
-                            })
-                      ]),
+                  Padding(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            RaisedButton(
+                              color: Colors.amber,
+                                shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0)),
+                                child: Icon(Icons.add),
+                                // Text(
+                                //   '+',
+                                //   style: TextStyle(
+                                //       fontSize: 20.0, fontFamily: 'gunplay'),
+                                // ),
+                                onPressed: () {
+                                  _addPlayer(context);
+                                }),
+                            FlatButton(
+                                child: Text(
+                                  'SUIVANT',
+                                  style: TextStyle(
+                                      fontFamily: 'gunplay', fontSize: 24.0),
+                                ),
+                                onPressed: () {
+                                  if (_players.length < 2) {
+                                    final snackBar = SnackBar(
+                                      content:
+                                          Text('Il faut au moins 2 joueurs !'),
+                                    );
+                                    Scaffold.of(builderContext)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => NameGame(
+                                              _players
+                                                  .map((p) => p.name)
+                                                  .toList())),
+                                    );
+                                  }
+                                })
+                          ]),
+                      padding: EdgeInsets.only(top: 16.0)),
                   Expanded(
-                    child: ListView.builder(
+                      child: Padding(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => Divider(
+                            color: Colors.black,
+                            height: 0.0,
+                          ),
                       controller: _scrollController,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: _players.length,
                       itemBuilder: (context, index) => this._buildRow(index),
                     ),
-                  )
+                    padding: EdgeInsets.only(top: 26.0),
+                  ))
                 ]))));
   }
 
@@ -122,10 +141,8 @@ class PlayerListItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.black,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: 'Roboto',
-                    letterSpacing: 0.5,
-                    fontSize: 20,
+                    fontFamily: 'courier',
+                    fontSize: 20.0,
                   ),
                 ),
               ),

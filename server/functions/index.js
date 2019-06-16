@@ -15,13 +15,14 @@ exports.createGame = functions.https.onRequest((req, res) => {
     let name = req.body.data.name
     let players = req.body.data.players
     let missions = req.body.data.missions
+    let counterKill = req.body.data.includeCounterKill
     const store = admin.firestore()
     store.collection('games').where('name', '==', name).get().then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) { 
             res.send({data: { error: 'already_exists', message: 'The game name is already taken' }})
         } else {
             game = buildGame(players, missions)
-            store.collection('games').add({name, players: game}).then((docReference) => {
+            store.collection('games').add({name, players: game, counter_kill: counterKill}).then((docReference) => {
                 res.send({data: { result: docReference.id, message: 'Game created' }})
             })
         }

@@ -33,76 +33,100 @@ class _JoinGameState extends State<JoinGame> {
     if (_gameId == null || _players == null) {
       return new Scaffold(
           appBar: new AppBar(
-            title: new Text("Rejoindre une partie"),
+            title: new Text("REJOINDRE",
+                style: TextStyle(fontSize: 20.0, fontFamily: 'gunplay')),
           ),
           body: Builder(
-            builder: (builderContext) => new Column(children: [
-                  new Text('Comment s\'appelle la partie ?'),
+            builder: (builderContext) => new Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(children: [
+                  new Text('Comment s\'appelle la partie ?',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 20.0, fontFamily: 'courier')),
                   new TextField(
+                    style: TextStyle(fontFamily: 'courier'),
                     autofocus: true,
                     decoration: new InputDecoration(
-                        labelText: 'Nom', hintText: 'Pedro'),
+                        labelText: '', hintText: '007 Crew'),
                     onChanged: (value) {
                       _gameName = value;
                     },
                   ),
-                  new RaisedButton(
-                      child: new Text('OK'),
-                      onPressed: () {
-                        print('ok');
-                        setGame(_gameName).then((game) async {
-                          print(game);
-                          print('game');
-                          if (game == false) {
-                            final snackBar = SnackBar(
-                              content: Text('Impossible de trouver la partie !'),
-                            );
-                            Scaffold.of(builderContext).showSnackBar(snackBar);
-                            print('error trying to set game');
-                          } else {
-                            print('returning');
-                            print(game);
-                            _gameId = game['id'];
-                            _players = game['players'];
-                            setState(() {});
-                          }
-                        });
-                      })
-                ]),
+                  Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: new FlatButton(
+                          color: Colors.amber,
+                          child: new Text(
+                            'OK',
+                            style: TextStyle(
+                                fontFamily: 'gunplay', fontSize: 20.0),
+                          ),
+                          onPressed: () {
+                            setGame(_gameName).then((game) async {
+                              print(game);
+                              print('game');
+                              if (game == false) {
+                                final snackBar = SnackBar(
+                                  content:
+                                      Text('Impossible de trouver la partie !'),
+                                );
+                                Scaffold.of(builderContext)
+                                    .showSnackBar(snackBar);
+                                print('error trying to set game');
+                              } else {
+                                _gameId = game['id'];
+                                _players = game['players'];
+                                setState(() {});
+                              }
+                            });
+                          }))
+                ])),
           ));
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text("Partie en cours"),
+          // title: Text("Partie en cours"),
+          title: Text("QUI ÊTES-VOUS ?",
+              style: TextStyle(fontSize: 18.0, fontFamily: 'gunplay')),
         ),
         body: Center(
-            child: Column(children: [
-          Text("Qui êtes vous ?"),
-          Expanded(
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _players.length,
-                itemBuilder: (context, index) {
-                  return SizedBox(
-                    width: double.infinity,
-                    // height: double.infinity,
-                    child: new RaisedButton(
-                      onPressed: () =>
-                          goToCurrentGame(_players[index], context),
-                      child: Text(_players[index]['name']),
-                    ),
-                  );
-                }),
-          ),
-          RaisedButton(
-            onPressed: () async {
-              var prefs = await SharedPreferences.getInstance();
-              prefs.clear();
-            },
-            child: Text('Reset game!'),
-          ),
-        ])),
+            child: Padding(
+                child: Column(children: [
+                  Expanded(
+                    child: ListView.separated(
+                        separatorBuilder: (context, index) => Divider(
+                              color: Colors.black,
+                              height: 0.0,
+                            ),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: _players.length,
+                        itemBuilder: (context, index) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: new FlatButton(
+                                      onPressed: () => goToCurrentGame(
+                                          _players[index], context),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        child: Text(
+                                          _players[index]['name'],
+                                          textAlign: TextAlign.left,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontFamily: 'courier'),
+                                        ),
+                                      )))
+                            ],
+                          );
+                        }),
+                  ),
+                ]),
+                padding: EdgeInsets.all(20.0))),
       );
     }
   }

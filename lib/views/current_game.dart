@@ -11,7 +11,12 @@ class CurrentGame extends StatefulWidget {
 }
 
 class _CurrentGameState extends State<CurrentGame> {
-  var _currentPlayerName, _currentGameId, _currentPlayers, _currentPlayer;
+  var _currentPlayerName,
+      _currentGameId,
+      _currentPlayers,
+      _currentPlayer,
+      _currentGameName,
+      _currentGameCounterKillStatus;
   void initState() {
     super.initState();
 
@@ -22,6 +27,9 @@ class _CurrentGameState extends State<CurrentGame> {
       getGameSnapshot(_currentGameId).listen((doc) {
         if (doc.exists) {
           _currentPlayers = doc.data['players'];
+          _currentGameName = doc.data['name'];
+          _currentGameCounterKillStatus = doc.data['counter_kill'];
+          print(_currentGameCounterKillStatus);
           _currentPlayers.sort((a, b) {
             // print(b['kills'].compareTo(a['kills']) is int); // WHY GOD WHY ???
             if (a['kills'] < b['kills']) {
@@ -56,18 +64,27 @@ class _CurrentGameState extends State<CurrentGame> {
       return PageView(children: <Widget>[
         Scaffold(
             body: Center(
-          child: new Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                new Text('Vous avez gagné la partie !'),
-                new RaisedButton(
-                    child: Text('Menu principal'),
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/', (_) => false);
-                    })
-              ]),
-        )),
+                child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Image.asset('assets/images/complete.png'),
+                          new Text(
+                            'Félicitations, vous êtes notre meilleur espion !',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'courier', fontSize: 20.0),
+                          ),
+                          new FlatButton(
+                              child: Text('MENU',
+                                  style: TextStyle(
+                                      fontFamily: 'gunplay', fontSize: 32.0)),
+                              onPressed: () {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, '/', (_) => false);
+                              })
+                        ])))),
         Scaffold(body: Rankings(_currentPlayers))
       ]);
     } else if (_currentPlayer != null && _currentPlayer["killed"] == true) {
@@ -77,9 +94,16 @@ class _CurrentGameState extends State<CurrentGame> {
           child: new Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                new Text('Vous avez été tué !'),
-                new RaisedButton(
-                    child: Text('Menu principal'),
+                Image.asset('assets/images/failed.png'),
+                new Text(
+                  'Vous avez été tué !',
+                  style: TextStyle(fontFamily: 'courier', fontSize: 20.0),
+                ),
+                new FlatButton(
+                    // color: Colors.amber,
+                    child: Text('MENU',
+                        style:
+                            TextStyle(fontFamily: 'gunplay', fontSize: 32.0)),
                     onPressed: () {
                       Navigator.pushNamedAndRemoveUntil(
                           context, '/', (_) => false);
@@ -94,47 +118,120 @@ class _CurrentGameState extends State<CurrentGame> {
       return PageView(children: <Widget>[
         Scaffold(
             body: Padding(
-          padding: new EdgeInsets.all(2.0),
-          child: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                Text(_currentPlayerName),
-                Text(_currentPlayer['mission']),
-                Text('sur ' + _currentPlayer['to_kill']),
-                new RaisedButton(
-                    child: Text('Menu principal'),
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/', (_) => false);
-                    }),
-                new RaisedButton(
-                    child: Text('J\'ai killé'),
-                    onPressed: () async {
-                      await killed(
-                          _currentGameId, _currentPlayerName, 'killed');
-                      // await updateGameState(newGameState['result']);
-                    }),
-                new RaisedButton(
-                    child: Text('J\'ai été killé'),
-                    onPressed: () async {
-                      await killed(
-                          _currentGameId, _currentPlayerName, 'got_killed');
-                    }),
-                new RaisedButton(
-                    child: Text('J\'ai contre killé'),
-                    onPressed: () async {
-                      await killed(
-                          _currentGameId, _currentPlayerName, 'counter_killed');
-                    }),
-                new RaisedButton(
-                    child: Text('J\'ai été contre killé'),
-                    onPressed: () async {
-                      await killed(_currentGameId, _currentPlayerName,
-                          'got_counter_killed');
-                    })
-              ])),
-        )),
+                padding: new EdgeInsets.all(16.0),
+                child: Stack(children: [
+                  Container(
+                    child: Icon(Icons.navigate_next),
+                    alignment: Alignment(1, 0),
+                  ),
+                  Center(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                        Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              _currentGameName,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 24.0, fontFamily: 'courier'),
+                            )),
+                        Container(
+                          child: Column(children: [
+                            Row(children: [
+                              Image.asset(
+                                'assets/images/target.png',
+                                width: 24.0,
+                              ),
+                              Text(
+                                ' CIBLE : ',
+                                style: TextStyle(
+                                    fontFamily: 'gunplay', fontSize: 24.0),
+                              ),
+                            ]),
+                            Text(
+                              _currentPlayer['to_kill'],
+                              style: TextStyle(
+                                  fontFamily: 'courier', fontSize: 24.0),
+                            ),
+                            Row(children: [
+                              Image.asset(
+                                'assets/images/strategy.png',
+                                width: 24.0,
+                              ),
+                              Text(
+                                ' MISSION : ',
+                                style: TextStyle(
+                                    fontFamily: 'gunplay', fontSize: 24.0),
+                              ),
+                            ]),
+                            Text(
+                              _currentPlayer['mission'],
+                              style: TextStyle(
+                                  fontFamily: 'courier', fontSize: 24.0),
+                            ),
+                          ]),
+                        ),
+                        Container(
+                            child: Column(
+                                children: [
+                          // new FlatButton(
+                          //     color: Colors.amber,
+                          //     child: Text(
+                          //       'J\'AI KILLÉ',
+                          //       style: TextStyle(
+                          //           fontFamily: 'gunplay', fontSize: 24.0),
+                          //     ),
+                          //     onPressed: () async {
+                          //       await killed(_currentGameId, _currentPlayerName,
+                          //           'killed');
+                          //       // await updateGameState(newGameState['result']);
+                          //     }),
+                          new FlatButton(
+                              color: Colors.amber,
+                              child: Text(
+                                'J\'AI ÉTÉ KILLÉ',
+                                style: TextStyle(
+                                    fontFamily: 'gunplay', fontSize: 24.0),
+                              ),
+                              onPressed: () async {
+                                await killed(_currentGameId, _currentPlayerName,
+                                    'got_killed');
+                              }),
+                          // new FlatButton(
+                          //     child: Text('J\'ai contre killé'),
+                          //     onPressed: () async {
+                          //       await killed(
+                          //           _currentGameId, _currentPlayerName, 'counter_killed');
+                          //     }),
+                          _currentGameCounterKillStatus == true
+                              ? new FlatButton(
+                                  color: Colors.amber,
+                                  child: Text(
+                                    'J\'AI ÉTÉ CONTRE KILLÉ',
+                                    style: TextStyle(
+                                        fontFamily: 'gunplay', fontSize: 24.0),
+                                  ),
+                                  onPressed: () async {
+                                    await killed(
+                                        _currentGameId,
+                                        _currentPlayerName,
+                                        'got_counter_killed');
+                                  })
+                              : null,
+                          new FlatButton(
+                              child: Text(
+                                'MENU',
+                                style: TextStyle(
+                                    fontFamily: 'gunplay', fontSize: 24.0),
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, '/', (_) => false);
+                              }),
+                        ].where((o) => o != null).toList()))
+                      ])),
+                ]))),
         Scaffold(body: Rankings(_currentPlayers))
       ]);
     }

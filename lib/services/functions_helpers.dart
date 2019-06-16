@@ -1,6 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 
-createGame(String name, List<String> players, List<String> missions) async {
+createGame(String name, List<String> players, List<String> missions, bool includeCounterKill) async {
   try {
     final dynamic resp = await CloudFunctions.instance.call(
       functionName: 'createGame',
@@ -8,7 +8,8 @@ createGame(String name, List<String> players, List<String> missions) async {
         'message': 'hello world!',
         'name': name,
         'players': players,
-        'missions': missions
+        'missions': missions,
+        'includeCounterKill': includeCounterKill
       },
     );
     return resp;

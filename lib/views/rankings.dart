@@ -28,7 +28,7 @@ class Rankings extends StatelessWidget {
                             players[index]['name'],
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontFamily: 'gunplay',
+                                fontFamily: 'courier',
                                 fontSize: 20.0,
                                 decoration: players[index]['killed'] == true
                                     ? TextDecoration.lineThrough
@@ -39,7 +39,7 @@ class Rankings extends StatelessWidget {
                             flex: 1,
                             child: Text(players[index]['kills'].toString(),
                                 style: TextStyle(
-                                  fontFamily: 'gunplay',
+                                  fontFamily: 'courier',
                                   fontSize: 20.0,
                                 )))
                       ]));

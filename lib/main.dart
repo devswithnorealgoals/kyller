@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './views/new_game.dart';
 import './views/join_game.dart';
 import './views/current_game.dart';
+import './views/options.dart';
 import './services/preferences.dart';
 
 void main() => runApp(MyApp());
@@ -37,6 +38,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     print(animationController);
     animationController.repeat();
   }
+
   @override
   void dispose() {
     animationController.dispose();
@@ -79,7 +81,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               FlatButton(
                   child: Text(
                     'NOUVEAU JEU',
-                    style: TextStyle(fontSize: 28.0, fontFamily: 'gunplay', color: Color(0xffF1D302)),
+                    style: TextStyle(
+                        fontSize: 28.0,
+                        fontFamily: 'gunplay',
+                        color: Color(0xffF1D302)),
                   ),
                   // highlightColor: Colors.amberAccent,
                   onPressed: () {
@@ -105,21 +110,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     fontSize: 28.0, fontFamily: 'gunplay'));
                       })),
               FutureBuilder(
-                future: getGameId(),
-                builder: (context, snapshot) {
-                 return snapshot.data != null ? 
-                FlatButton(
-                onPressed: () async {
-                  var inst = await SharedPreferences.getInstance();
-                  inst.clear();
-                  setState(() {});
-                },
-                child: Text('QUITTER',
-                    style: TextStyle(fontSize: 28.0, fontFamily: 'gunplay')),
-              ) : FlatButton();
-                } 
-              )
-              ,
+                  future: getGameId(),
+                  builder: (context, snapshot) {
+                    return snapshot.data != null
+                        ? FlatButton(
+                            onPressed: () async {
+                              var inst = await SharedPreferences.getInstance();
+                              inst.clear();
+                              setState(() {});
+                            },
+                            child: Text('QUITTER',
+                                style: TextStyle(
+                                    fontSize: 28.0, fontFamily: 'gunplay')),
+                          )
+                        : FlatButton();
+                  }),
             ]),
           )
         ],
