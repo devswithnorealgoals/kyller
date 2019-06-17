@@ -3,6 +3,7 @@ import '../services/functions_helpers.dart';
 import '../services/utils.dart';
 import '../services/preferences.dart';
 import './join_game.dart';
+import './missions_choice.dart';
 
 class NameGame extends StatefulWidget {
   final List<String> players;
@@ -21,12 +22,13 @@ class _NameGameState extends State<NameGame> {
       setState(() => _includeCounterKill = value);
   void _customMissionsChanged(bool value) =>
       setState(() => _includeCustomMissions = value);
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("PARAMÈTRES", style: TextStyle(fontFamily: 'gunplay', fontSize: 20.0)),
+          title: Text("PARAMÈTRES",
+              style: TextStyle(fontFamily: 'gunplay', fontSize: 20.0)),
         ),
         body: Builder(
           builder: (builderContext) => Center(
@@ -77,17 +79,24 @@ class _NameGameState extends State<NameGame> {
                         style: TextStyle(fontFamily: 'gunplay', fontSize: 24.0),
                       ),
                       onPressed: () async {
-                        var missions = randomMissions(widget.players.length);
-                        var game = await createGame(
-                            gameNameController.text, widget.players, missions, _includeCounterKill);
-                        if (game["result"] != null) {
-                          navigateToGame(game["result"], context);
+                        if (_includeCustomMissions == false) {
+                          var missions = randomMissions(widget.players.length);
+                          var game = await createGame(gameNameController.text,
+                              widget.players, missions, _includeCounterKill);
+                          if (game["result"] != null) {
+                            navigateToGame(game["result"], context);
+                          } else {
+                            final snackBar = SnackBar(
+                              content: Text('Ce nom est déjà pris !'),
+                            );
+                            // Find the Scaffold in the Widget tree and use it to show a SnackBar!
+                            Scaffold.of(builderContext).showSnackBar(snackBar);
+                          }
                         } else {
-                          final snackBar = SnackBar(
-                            content: Text('Ce nom est déjà pris !'),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MissionsChoice(widget.players, _includeCounterKill)),
                           );
-                          // Find the Scaffold in the Widget tree and use it to show a SnackBar!
-                          Scaffold.of(builderContext).showSnackBar(snackBar);
                         }
                       }),
                   padding: EdgeInsets.all(40),
