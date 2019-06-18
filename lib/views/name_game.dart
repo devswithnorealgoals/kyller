@@ -35,7 +35,7 @@ class _NameGameState extends State<NameGame> {
                   child: Column(children: [
                 Padding(
                   child: Text("Comment s'appelle votre partie ?",
-                      style: TextStyle(fontFamily: 'courier', fontSize: 14.0)),
+                      style: TextStyle(fontFamily: 'courier', fontSize: 20.0)),
                   padding: EdgeInsets.all(40),
                 ),
                 Padding(

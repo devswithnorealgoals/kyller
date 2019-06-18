@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:share/share.dart';
 import '../services/functions_helpers.dart';
 import '../services/db_helpers.dart';
 import './rankings.dart';
@@ -122,115 +123,97 @@ class _CurrentGameState extends State<CurrentGame> {
             SingleChildScrollView(
                 child: Padding(
               padding: new EdgeInsets.all(16.0),
-              child:
-
-                  // child: Column(
-                  //     children: [
-                  //   // new FlatButton(
-                  //   //     color: Colors.amber,
-                  //   //     child: Text(
-                  //   //       'J\'AI KILLÉ',
-                  //   //       style: TextStyle(
-                  //   //           fontFamily: 'gunplay', fontSize: 24.0),
-                  //   //     ),
-                  //   //     onPressed: () async {
-                  //   //       await killed(_currentGameId, _currentPlayerName,
-                  //   //           'killed');
-                  //   //       // await updateGameState(newGameState['result']);
-                  //   //     }),
-                  //   new FlatButton(
-                  //       color: Colors.amber,
-                  //       child: Text(
-                  //         'J\'AI ÉTÉ KILLÉ',
-                  //         style: TextStyle(
-                  //             fontFamily: 'gunplay', fontSize: 24.0),
-                  //       ),
-                  //       onPressed: () async {
-                  //         await killed(_currentGameId, _currentPlayerName,
-                  //             'got_killed');
-                  //       }),
-                  //   // new FlatButton(
-                  //   //     child: Text('J\'ai contre killé'),
-                  //   //     onPressed: () async {
-                  //   //       await killed(
-                  //   //           _currentGameId, _currentPlayerName, 'counter_killed');
-                  //   //     }),
-                  //   _currentGameCounterKillStatus == true
-                  //       ? new FlatButton(
-                  //           color: Colors.amber,
-                  //           child: Text(
-                  //             'J\'AI ÉTÉ CONTRE KILLÉ',
-                  //             style: TextStyle(
-                  //                 fontFamily: 'gunplay', fontSize: 24.0),
-                  //           ),
-                  //           onPressed: () async {
-                  //             await killed(_currentGameId,
-                  //                 _currentPlayerName, 'got_counter_killed');
-                  //           })
-                  //       : null,
-                  //   new FlatButton(
-                  //       child: Text(
-                  //         'MENU',
-                  //         style: TextStyle(
-                  //             fontFamily: 'gunplay', fontSize: 24.0),
-                  //       ),
-                  //       onPressed: () {
-                  //         Navigator.pushNamedAndRemoveUntil(
-                  //             context, '/', (_) => false);
-                  //       }),
-                  // ].where((o) => o != null).toList())
-
-                  Center(
-                      child: Padding(
-                padding: EdgeInsets.fromLTRB(0.0, 0.0, 42.0, 0.0),
+              child: Center(
+                  child: Padding(
+                padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                          padding: EdgeInsets.all(10.0),
+                          padding: EdgeInsets.only(top: 20.0),
                           child: Text(
                             _currentGameName,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 24.0, fontFamily: 'courier'),
+                                fontSize: 30.0, fontFamily: 'courier'),
                           )),
+                      ButtonTheme(
+                        padding: EdgeInsets.only(top:0),
+                        height: 10.0,
+                        child: FlatButton(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  'Partager',
+                                  style: TextStyle(fontFamily: 'courier'),
+                                ),
+                                Icon(Icons.insert_link)
+                              ],
+                            ),
+                            onPressed: () {
+                              print('http://localhost:8080/game/' +
+                                  _currentGameId);
+                              Share.share('http://localhost:8080/game/' +
+                                  _currentGameId);
+                            }),
+                      ),
                       Container(
-                        child: Column(children: [
-                          Row(children: [
-                            Image.asset(
-                              'assets/images/target.png',
-                              width: 24.0,
-                            ),
-                            Text(
-                              ' CIBLE : ',
-                              style: TextStyle(
-                                  fontFamily: 'gunplay', fontSize: 24.0),
-                            ),
-                          ]),
-                          Text(
-                            _currentPlayer['to_kill'],
-                            style: TextStyle(
-                                fontFamily: 'courier', fontSize: 24.0),
-                          ),
-                          Row(children: [
-                            Image.asset(
-                              'assets/images/strategy.png',
-                              width: 24.0,
-                            ),
-                            Text(
-                              ' MISSION : ',
-                              style: TextStyle(
-                                  fontFamily: 'gunplay', fontSize: 24.0),
-                            ),
-                          ]),
-                          Container(
-                            child: Text(
-                              _currentPlayer['mission'],
-                              style: TextStyle(
-                                  fontFamily: 'courier', fontSize: 24.0),
-                            ),
-                          )
-                        ]),
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 30.0, 0.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 20.0, bottom: 10.0),
+                                    child: Row(children: [
+                                      Image.asset(
+                                        'assets/images/target.png',
+                                        width: 24.0,
+                                      ),
+                                      Text(
+                                        ' CIBLE : ',
+                                        style: TextStyle(
+                                            fontFamily: 'gunplay',
+                                            fontSize: 24.0),
+                                      ),
+                                    ]),
+                                  ),
+                                  Container(
+                                    child: Text(
+                                      _currentPlayer['to_kill'],
+                                      style: TextStyle(
+                                          fontFamily: 'courier',
+                                          fontSize: 24.0),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 20.0, bottom: 10.0),
+                                    child: Row(children: [
+                                      Image.asset(
+                                        'assets/images/strategy.png',
+                                        width: 24.0,
+                                      ),
+                                      Text(
+                                        ' MISSION : ',
+                                        style: TextStyle(
+                                            fontFamily: 'gunplay',
+                                            fontSize: 24.0),
+                                      ),
+                                    ]),
+                                  ),
+                                  Container(
+                                    child: Text(
+                                      _currentPlayer['mission'],
+                                      style: TextStyle(
+                                          fontFamily: 'courier',
+                                          fontSize: 24.0),
+                                    ),
+                                  )
+                                ])),
                       ),
                     ]),
               )),
@@ -239,7 +222,7 @@ class _CurrentGameState extends State<CurrentGame> {
               child: new RotatedBox(
                   quarterTurns: 3,
                   child: new Text(
-                    "RANKINGS",
+                    "CLASSEMENT",
                     style: TextStyle(fontFamily: 'gunplay', fontSize: 18.0),
                   )),
               alignment: Alignment(1, 0),

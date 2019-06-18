@@ -21,7 +21,7 @@ dependencies:
   cloud_functions: ^0.1.0
   random_words: ^1.0.2
   shared_preferences:
-  
+  share: ^0.6.1
   flutter:
     sdk: flutter
 
