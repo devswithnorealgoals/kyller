@@ -14,7 +14,7 @@ class NameGame extends StatefulWidget {
 }
 
 class _NameGameState extends State<NameGame> {
-  final gameNameController = TextEditingController();
+  final _gameNameController = TextEditingController();
   bool _includeCounterKill = false;
   bool _includeCustomMissions = false;
 
@@ -41,7 +41,7 @@ class _NameGameState extends State<NameGame> {
                 Padding(
                   child: TextField(
                     style: TextStyle(fontFamily: 'courier'),
-                    controller: gameNameController,
+                    controller: _gameNameController,
                   ),
                   padding: EdgeInsets.all(40),
                 ),
@@ -79,9 +79,10 @@ class _NameGameState extends State<NameGame> {
                         style: TextStyle(fontFamily: 'gunplay', fontSize: 24.0),
                       ),
                       onPressed: () async {
+                        if (_gameNameController.text == '') {return;}
                         if (_includeCustomMissions == false) {
                           var missions = randomMissions(widget.players.length);
-                          var game = await createGame(gameNameController.text,
+                          var game = await createGame(_gameNameController.text,
                               widget.players, missions, _includeCounterKill);
                           if (game["result"] != null) {
                             navigateToGame(game["result"], context);
@@ -95,7 +96,7 @@ class _NameGameState extends State<NameGame> {
                         } else {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => MissionsChoice(widget.players, _includeCounterKill)),
+                            MaterialPageRoute(builder: (context) => MissionsChoice(widget.players, _includeCounterKill, _gameNameController.text)),
                           );
                         }
                       }),
