@@ -17,6 +17,7 @@ class _MissionsChoiceState extends State<MissionsChoice> {
   List<MissionListItem> _missions = [];
   String _missionTyped;
   final _textFieldController = new TextEditingController();
+  bool _creating = false;
 
   @override
   void dispose() {
@@ -33,91 +34,120 @@ class _MissionsChoiceState extends State<MissionsChoice> {
             style: TextStyle(fontFamily: 'gunplay', fontSize: 20.0),
           ),
         ),
-        body: Builder(
-          builder: (builderContext) => Center(
-                  child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Stack(
-                  children: <Widget>[
-                    Column(children: [
-                      new TextField(
-                        controller: _textFieldController,
-                        style: TextStyle(fontFamily: 'courier'),
-                        autofocus: true,
-                        decoration: new InputDecoration(
-                            labelText: '',
-                            hintText: 'Faire boire un shot de tequila.'),
-                        onChanged: (value) {
-                          _missionTyped = value;
-                        },
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Padding(
-                              child: RaisedButton(
-                                  color: Colors.amber,
-                                  child: Text(
-                                    'Ajouter',
-                                    style: TextStyle(
-                                        fontSize: 14.0, fontFamily: 'courier'),
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          new BorderRadius.circular(30.0)),
-                                  onPressed: () {
-                                    checkIfExistsAndAddMission(_missionTyped, builderContext);
-                                    setState(() {});
-                                  }),
-                              padding: EdgeInsets.only(top: 16.0),
-                            )
-                          ]),
-                      Expanded(
-                          child: Padding(
-                        child: ListView.separated(
-                          separatorBuilder: (context, index) => Divider(
-                                color: Colors.black,
-                                height: 0.0,
+        body: Builder(builder: (builderContext) {
+          var center = Center(
+              child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Stack(
+              children: <Widget>[
+                Column(children: [
+                  new TextField(
+                    controller: _textFieldController,
+                    style: TextStyle(fontFamily: 'courier'),
+                    autofocus: true,
+                    decoration: new InputDecoration(
+                        labelText: '',
+                        hintText: 'Faire boire un shot de tequila.'),
+                    onChanged: (value) {
+                      _missionTyped = value;
+                    },
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Padding(
+                          child: RaisedButton(
+                              color: Colors.amber,
+                              child: Text(
+                                'Ajouter',
+                                style: TextStyle(
+                                    fontSize: 14.0, fontFamily: 'courier'),
                               ),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: _missions.length,
-                          itemBuilder: (context, index) => _missions[index],
-                        ),
-                        padding: EdgeInsets.only(top: 26.0),
-                      ))
-                    ]),
-                    Container(
-                      alignment: Alignment(0, 1),
-                      child: FlatButton(
-                          color: Colors.amber,
-                          child: Text(
-                            'DÉMARRER',
-                            style: TextStyle(
-                                fontFamily: 'gunplay', fontSize: 18.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(30.0)),
+                              onPressed: () {
+                                checkIfExistsAndAddMission(
+                                    _missionTyped, builderContext);
+                                setState(() {});
+                              }),
+                          padding: EdgeInsets.only(top: 16.0),
+                        )
+                      ]),
+                  Expanded(
+                      child: Padding(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => Divider(
+                            color: Colors.black,
+                            height: 0.0,
                           ),
-                          onPressed: () async {
-                            var missions = _missions.map((m) => m.name);
-                            var additionalMissions = randomMissions(
-                                widget.players.length - _missions.length);
-                            missions = new List.from(missions)
-                              ..addAll(additionalMissions);
-                            print(missions);
-                            var game = await createGame(
-                                widget.gameName,
-                                widget.players,
-                                missions,
-                                widget.includeCounterKill);
-                            if (game["result"] != null) {
-                              navigateToGame(game["result"], context);
-                              print('démarrer');
-                            }
-                          }),
-                    )
-                  ],
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: _missions.length,
+                      itemBuilder: (context, index) => _missions[index],
+                    ),
+                    padding: EdgeInsets.only(top: 26.0),
+                  ))
+                ]),
+                Container(
+                  alignment: Alignment(0, 1),
+                  child: FlatButton(
+                      color: Colors.amber,
+                      child: Text(
+                        'DÉMARRER',
+                        style: TextStyle(fontFamily: 'gunplay', fontSize: 18.0),
+                      ),
+                      onPressed: () async {
+                        setState(() {
+                          _creating = true;
+                        });
+                        var missions = _missions.map((m) => m.name);
+                        var additionalMissions = await randomMissions(
+                            widget.players.length - _missions.length);
+                        missions = new List.from(missions)
+                          ..addAll(additionalMissions);
+                        print(missions);
+                        var game = await createGame(
+                            widget.gameName,
+                            widget.players,
+                            missions,
+                            widget.includeCounterKill);
+                        if (game["result"] != null) {
+                          setState(() {
+                            _creating = false;
+                          });
+                          navigateToGame(game["result"], context);
+                          print('démarrer');
+                        } else {
+                          setState(() {
+                            _creating = false;
+                          });
+                        }
+                      }),
+                )
+              ],
+            ),
+          ));
+          var l = new List<Widget>();
+          l.add(center);
+          if (_creating == true) {
+            var modal = new Stack(
+              children: [
+                new Opacity(
+                  opacity: 0.3,
+                  child: const ModalBarrier(
+                      dismissible: false, color: Colors.grey),
                 ),
-              )),
-        ));
+                new Center(
+                  child: new CircularProgressIndicator(),
+                ),
+              ],
+            );
+            l.add(modal);
+          }
+          var stack = new Stack(children: l);
+          return stack;
+        }));
   }
 
   navigateToGame(String game, BuildContext context) async {

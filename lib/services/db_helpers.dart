@@ -22,3 +22,7 @@ Future<DocumentReference> addGame(List players, String name){
     "players": players
   });
 }
+
+Future<QuerySnapshot> getMissions(){
+  return Firestore.instance.collection('missions').getDocuments();
+}

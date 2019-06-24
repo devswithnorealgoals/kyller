@@ -10,6 +10,20 @@ admin.initializeApp({
   databaseURL: "https://kyller.firebaseio.com"
 });
 
+exports.testName = functions.https.onRequest((req, res) => {
+    let name = req.body.data.name
+    const store = admin.firestore()
+    store.collection('games').where('name', '==', name).get().then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) { 
+            res.send({data: { error: 'already_exists', message: 'The game name is already taken' }})
+        } else {
+            res.send({data: { status: 'ok'}})
+        }
+    }).catch(reason => {
+        console.log(reason)
+        res.send({reason})
+    })
+})
 
 exports.createGame = functions.https.onRequest((req, res) => {
     let name = req.body.data.name

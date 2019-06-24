@@ -1,5 +1,23 @@
 import 'package:cloud_functions/cloud_functions.dart';
 
+testName(String name) async {
+  try {
+    final dynamic resp = await CloudFunctions.instance.call(
+      functionName: 'testName',
+      parameters: <String, dynamic>{
+        'name': name,
+      },
+    );
+    return resp;
+  } on CloudFunctionsException catch (e) {
+    print('caught firebase functions exception');
+    print(e.details);
+  } catch (e) {
+    print('caught generic exception');
+    print(e);
+  }
+}
+
 createGame(String name, List<String> players, List<String> missions, bool includeCounterKill) async {
   try {
     final dynamic resp = await CloudFunctions.instance.call(

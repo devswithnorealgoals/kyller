@@ -52,6 +52,7 @@ class _NewGameState extends State<NewGame> {
                                     final snackBar = SnackBar(
                                       content:
                                           Text('Il faut au moins 2 joueurs !'),
+                                          duration: Duration(seconds: 1),
                                     );
                                     Scaffold.of(builderContext)
                                         .showSnackBar(snackBar);
