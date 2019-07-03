@@ -69,6 +69,20 @@ exports.killed = functions.https.onCall((data, context) => {
     })
 })
 
+exports.getGameInfos = functions.https.onCall((data, context) => {
+    let gameId = data.gameId
+    const store = admin.firestore()
+    return store.collection('games').doc(gameId).get().then((game) => {
+        if (game && game.data()) {
+            return { game: game.data() }
+        } else {
+            return { error: 'error getting game', message: 'cannot find game' }
+        }
+    }, (err) => {
+        return { error: 'error getting game', message: err }
+    })
+})
+
 killed = (players, playerName, status) => {
     var player = players.filter((p) => p.name === playerName && p.killed === false)[0] // soi
     var toKill = players.filter((p) => p.name === player.to_kill && p.killed === false)[0] // à tuer

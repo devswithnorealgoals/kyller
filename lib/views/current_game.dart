@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
 import '../services/functions_helpers.dart';
 import '../services/db_helpers.dart';
+import 'package:http/http.dart';
 import './rankings.dart';
 
 class CurrentGame extends StatefulWidget {
@@ -20,6 +21,10 @@ class _CurrentGameState extends State<CurrentGame> {
       _currentGameCounterKillStatus;
   void initState() {
     super.initState();
+
+    get('https://kyller-web.herokuapp.com').then((result) {
+      print('ok');
+    });
 
     SharedPreferences.getInstance().then((instance) async {
       print(instance.getString('currentGameId'));
@@ -138,7 +143,7 @@ class _CurrentGameState extends State<CurrentGame> {
                                 fontSize: 30.0, fontFamily: 'courier'),
                           )),
                       ButtonTheme(
-                        padding: EdgeInsets.only(top:0),
+                        padding: EdgeInsets.only(top: 0),
                         height: 10.0,
                         child: FlatButton(
                             child: Row(
@@ -153,10 +158,9 @@ class _CurrentGameState extends State<CurrentGame> {
                               ],
                             ),
                             onPressed: () {
-                              print('http://localhost:8080/game/' +
-                                  _currentGameId);
-                              Share.share('http://localhost:8080/game/' +
-                                  _currentGameId);
+                              Share.share(
+                                  'https://kyller-web.herokuapp.com/game/' +
+                                      _currentGameId);
                             }),
                       ),
                       Container(
