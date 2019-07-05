@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Kyller',
       theme: ThemeData(primarySwatch: Colors.grey, primaryColor: Colors.black),
+      debugShowCheckedModeBanner: false,
       home: Home(),
     );
   }

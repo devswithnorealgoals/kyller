@@ -33,7 +33,8 @@ class _NameGameState extends State<NameGame> {
         ),
         body: Builder(builder: (builderContext) {
           var center = new Center(
-              child: Column(children: [
+              child: SingleChildScrollView(
+                  child: Column(children: [
             Padding(
               child: Text("Comment s'appelle votre partie ?",
                   style: TextStyle(fontFamily: 'courier', fontSize: 20.0)),
@@ -139,7 +140,7 @@ class _NameGameState extends State<NameGame> {
                   }),
               padding: EdgeInsets.all(40),
             ),
-          ]));
+          ])));
 
           var l = new List<Widget>();
           l.add(center);
