@@ -59,7 +59,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Padding(
             padding: EdgeInsets.only(top: 30.0),
             child: Text(
-              'LE KILLER',
+              'THE KILLER',
               style: TextStyle(fontFamily: 'gunplay3d', fontSize: 50.0),
             ),
           ),

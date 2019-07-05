@@ -139,7 +139,7 @@ DEPENDENCIES:
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
   - Firebase/Core
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `.symlinks/flutter/ios-release`)
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
 
@@ -172,7 +172,7 @@ EXTERNAL SOURCES:
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: ".symlinks/flutter/ios-release"
   share:
     :path: ".symlinks/plugins/share/ios"
   shared_preferences:
