@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './views/new_game.dart';
 import './views/join_game.dart';
 import './views/current_game.dart';
-import './views/options.dart';
 import './services/preferences.dart';
 
 void main() => runApp(MyApp());
@@ -79,7 +78,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               }),
           Container(
             child: Column(children: [
-              FlatButton(
+              TextButton(
                   child: Text(
                     'NOUVEAU JEU',
                     style: TextStyle(
@@ -94,7 +93,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       MaterialPageRoute(builder: (context) => NewGame()),
                     );
                   }),
-              FlatButton(
+              TextButton(
                   onPressed: () {
                     joinGame(context);
                   },
@@ -114,7 +113,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   future: getGameId(),
                   builder: (context, snapshot) {
                     return snapshot.data != null
-                        ? FlatButton(
+                        ? TextButton(
                             onPressed: () async {
                               var inst = await SharedPreferences.getInstance();
                               inst.clear();
@@ -124,7 +123,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 style: TextStyle(
                                     fontSize: 28.0, fontFamily: 'gunplay')),
                           )
-                        : FlatButton();
+                        : null;
                   }),
             ]),
           )
@@ -168,17 +167,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
   void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+    setState(() {});
   }
 
   @override
@@ -217,10 +207,6 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(
               'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
             ),
           ],
         ),

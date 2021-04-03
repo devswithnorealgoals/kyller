@@ -42,8 +42,7 @@ class _JoinGameState extends State<JoinGame> {
                 child: Column(children: [
                   new Text('Comment s\'appelle la partie ?',
                       textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 20.0, fontFamily: 'courier')),
+                      style: TextStyle(fontSize: 20.0, fontFamily: 'courier')),
                   new TextField(
                     style: TextStyle(fontFamily: 'courier'),
                     autofocus: true,
@@ -55,8 +54,7 @@ class _JoinGameState extends State<JoinGame> {
                   ),
                   Padding(
                       padding: EdgeInsets.only(top: 20.0),
-                      child: new FlatButton(
-                          color: Colors.amber,
+                      child: new TextButton(
                           child: new Text(
                             'OK',
                             style: TextStyle(
@@ -71,7 +69,7 @@ class _JoinGameState extends State<JoinGame> {
                                   content:
                                       Text('Impossible de trouver la partie !'),
                                 );
-                                Scaffold.of(builderContext)
+                                ScaffoldMessenger.of(builderContext)
                                     .showSnackBar(snackBar);
                                 print('error trying to set game');
                               } else {
@@ -107,7 +105,7 @@ class _JoinGameState extends State<JoinGame> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Expanded(
-                                  child: new FlatButton(
+                                  child: new TextButton(
                                       onPressed: () => goToCurrentGame(
                                           _players[index], context),
                                       child: SizedBox(

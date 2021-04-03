@@ -74,8 +74,7 @@ class _NameGameState extends State<NameGame> {
               activeColor: Colors.amber,
             ),
             Padding(
-              child: FlatButton(
-                  color: Colors.amber,
+              child: TextButton(
                   child: Text(
                     'START !',
                     style: TextStyle(fontFamily: 'gunplay', fontSize: 24.0),
@@ -106,7 +105,8 @@ class _NameGameState extends State<NameGame> {
                           duration: Duration(seconds: 1),
                         );
                         // Find the Scaffold in the Widget tree and use it to show a SnackBar!
-                        Scaffold.of(builderContext).showSnackBar(snackBar);
+                        ScaffoldMessenger.of(builderContext)
+                            .showSnackBar(snackBar);
                       }
                     } else {
                       setState(() {
@@ -122,7 +122,8 @@ class _NameGameState extends State<NameGame> {
                           duration: Duration(seconds: 1),
                         );
                         // Find the Scaffold in the Widget tree and use it to show a SnackBar!
-                        Scaffold.of(builderContext).showSnackBar(snackBar);
+                        ScaffoldMessenger.of(builderContext)
+                            .showSnackBar(snackBar);
                       } else if (exists["status"] == 'ok') {
                         Navigator.push(
                           context,
@@ -142,7 +143,7 @@ class _NameGameState extends State<NameGame> {
             ),
           ])));
 
-          var l = new List<Widget>();
+          var l = [];
           l.add(center);
           if (_creating == true) {
             var modal = new Stack(
@@ -168,7 +169,7 @@ class _NameGameState extends State<NameGame> {
 navigateToGame(String game, BuildContext context) async {
   var set = await setGameId(game);
   if (set == true) {
-    print("go to ${game}");
+    print("go to $game");
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => JoinGame()),

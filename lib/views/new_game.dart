@@ -27,11 +27,7 @@ class _NewGameState extends State<NewGame> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            RaisedButton(
-                              color: Colors.amber,
-                                shape: new RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0)),
+                            ElevatedButton(
                                 child: Icon(Icons.add),
                                 // Text(
                                 //   '+',
@@ -41,7 +37,7 @@ class _NewGameState extends State<NewGame> {
                                 onPressed: () {
                                   _addPlayer(context);
                                 }),
-                            FlatButton(
+                            TextButton(
                                 child: Text(
                                   'SUIVANT',
                                   style: TextStyle(
@@ -52,9 +48,9 @@ class _NewGameState extends State<NewGame> {
                                     final snackBar = SnackBar(
                                       content:
                                           Text('Il faut au moins 2 joueurs !'),
-                                          duration: Duration(seconds: 1),
+                                      duration: Duration(seconds: 1),
                                     );
-                                    Scaffold.of(builderContext)
+                                    ScaffoldMessenger.of(builderContext)
                                         .showSnackBar(snackBar);
                                   } else {
                                     Navigator.push(
@@ -73,9 +69,9 @@ class _NewGameState extends State<NewGame> {
                       child: Padding(
                     child: ListView.separated(
                       separatorBuilder: (context, index) => Divider(
-                            color: Colors.black,
-                            height: 0.0,
-                          ),
+                        color: Colors.black,
+                        height: 0.0,
+                      ),
                       controller: _scrollController,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,

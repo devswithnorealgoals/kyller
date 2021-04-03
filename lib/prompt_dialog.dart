@@ -11,25 +11,24 @@ Future<String> asyncInputDialog(BuildContext context) async {
         content: new Row(
           children: <Widget>[
             new Expanded(
-              child: new TextField(
-                autofocus: true,
-                decoration: new InputDecoration(
-                    labelText: 'Nom', hintText: 'Pedro'),
-                onChanged: (value) {
-                  teamName = value;
-                },
-              )
-            )
+                child: new TextField(
+              autofocus: true,
+              decoration:
+                  new InputDecoration(labelText: 'Nom', hintText: 'Pedro'),
+              onChanged: (value) {
+                teamName = value;
+              },
+            ))
           ],
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text('Ok'),
             onPressed: () {
               Navigator.of(context).pop(teamName);
             },
           ),
-          FlatButton(
+          TextButton(
             child: Text('Annuler'),
             onPressed: () {
               Navigator.of(context).pop(null);
@@ -40,4 +39,3 @@ Future<String> asyncInputDialog(BuildContext context) async {
     },
   );
 }
-

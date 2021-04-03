@@ -82,7 +82,7 @@ class _CurrentGameState extends State<CurrentGame> {
                             style: TextStyle(
                                 fontFamily: 'courier', fontSize: 20.0),
                           ),
-                          new FlatButton(
+                          new TextButton(
                               child: Text('MENU',
                                   style: TextStyle(
                                       fontFamily: 'gunplay', fontSize: 32.0)),
@@ -105,7 +105,7 @@ class _CurrentGameState extends State<CurrentGame> {
                   'Vous avez été tué !',
                   style: TextStyle(fontFamily: 'courier', fontSize: 20.0),
                 ),
-                new FlatButton(
+                new TextButton(
                     // color: Colors.amber,
                     child: Text('MENU',
                         style:
@@ -145,7 +145,7 @@ class _CurrentGameState extends State<CurrentGame> {
                       ButtonTheme(
                         padding: EdgeInsets.only(top: 0),
                         height: 10.0,
-                        child: FlatButton(
+                        child: TextButton(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               mainAxisSize: MainAxisSize.min,
@@ -232,8 +232,7 @@ class _CurrentGameState extends State<CurrentGame> {
               alignment: Alignment(1, 0),
             ),
             Container(
-              child: new FlatButton(
-                  color: Colors.amber,
+              child: new TextButton(
                   child: Text(
                     'J\'AI ÉTÉ KILLÉ',
                     style: TextStyle(fontFamily: 'gunplay', fontSize: 24.0),
@@ -246,8 +245,7 @@ class _CurrentGameState extends State<CurrentGame> {
             ),
             Container(
               child: _currentGameCounterKillStatus == true
-                  ? new FlatButton(
-                      color: Colors.amber,
+                  ? new TextButton(
                       child: Text(
                         'J\'AI ÉTÉ CONTRE KILLÉ',
                         style: TextStyle(fontFamily: 'gunplay', fontSize: 24.0),
@@ -261,7 +259,7 @@ class _CurrentGameState extends State<CurrentGame> {
             ),
             Container(
               alignment: Alignment(0, 0.95),
-              child: new FlatButton(
+              child: new TextButton(
                   child: Text(
                     'MENU',
                     style: TextStyle(fontFamily: 'gunplay', fontSize: 24.0),

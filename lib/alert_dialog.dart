@@ -8,13 +8,13 @@ Future<bool> asyncAlertialog(String question, BuildContext context) async {
       return AlertDialog(
         content: new Text(question),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text('Ok'),
             onPressed: () {
               Navigator.of(context).pop(true);
             },
           ),
-          FlatButton(
+          TextButton(
             child: Text('Annuler'),
             onPressed: () {
               Navigator.of(context).pop(false);
@@ -25,4 +25,3 @@ Future<bool> asyncAlertialog(String question, BuildContext context) async {
     },
   );
 }
-

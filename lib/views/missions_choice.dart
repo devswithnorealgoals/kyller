@@ -56,16 +56,12 @@ class _MissionsChoiceState extends State<MissionsChoice> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Padding(
-                          child: RaisedButton(
-                              color: Colors.amber,
+                          child: ElevatedButton(
                               child: Text(
                                 'Ajouter',
                                 style: TextStyle(
                                     fontSize: 14.0, fontFamily: 'courier'),
                               ),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(30.0)),
                               onPressed: () {
                                 checkIfExistsAndAddMission(
                                     _missionTyped, builderContext);
@@ -78,9 +74,9 @@ class _MissionsChoiceState extends State<MissionsChoice> {
                       child: Padding(
                     child: ListView.separated(
                       separatorBuilder: (context, index) => Divider(
-                            color: Colors.black,
-                            height: 0.0,
-                          ),
+                        color: Colors.black,
+                        height: 0.0,
+                      ),
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: _missions.length,
@@ -91,8 +87,7 @@ class _MissionsChoiceState extends State<MissionsChoice> {
                 ]),
                 Container(
                   alignment: Alignment(0, 1),
-                  child: FlatButton(
-                      color: Colors.amber,
+                  child: TextButton(
                       child: Text(
                         'DÉMARRER',
                         style: TextStyle(fontFamily: 'gunplay', fontSize: 18.0),
@@ -128,7 +123,7 @@ class _MissionsChoiceState extends State<MissionsChoice> {
               ],
             ),
           ));
-          var l = new List<Widget>();
+          var l = [];
           l.add(center);
           if (_creating == true) {
             var modal = new Stack(
@@ -153,7 +148,7 @@ class _MissionsChoiceState extends State<MissionsChoice> {
   navigateToGame(String game, BuildContext context) async {
     var set = await setGameId(game);
     if (set == true) {
-      print("go to ${game}");
+      print("go to $game");
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => JoinGame()),
@@ -169,14 +164,14 @@ class _MissionsChoiceState extends State<MissionsChoice> {
         content: Text('Cette mission existe déjà !'),
         duration: Duration(seconds: 1),
       );
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else if (name == "" || name == null) {
     } else if (_missions.length >= widget.players.length) {
       final snackBar = SnackBar(
         content: Text('Pas plus de missions que de joueurs !'),
         duration: Duration(seconds: 1),
       );
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       setState(() {
         var newmission = MissionListItem(new Key(name), hasDismissed, name);
