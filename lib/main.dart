@@ -26,7 +26,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  AnimationController animationController;
+  var animationController;
   @override
   void initState() {
     super.initState();
@@ -70,10 +70,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   width: MediaQuery.of(context).size.width / 2,
                 ),
               ),
-              builder: (BuildContext context, Widget _widget) {
+              builder: (BuildContext context, Widget? _widget) {
                 return new Transform.rotate(
                   angle: animationController.value * 6.3,
-                  child: _widget,
+                  // child: _widget,
                 );
               }),
           Container(
@@ -123,7 +123,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 style: TextStyle(
                                     fontSize: 28.0, fontFamily: 'gunplay')),
                           )
-                        : null;
+                        : Text('');
                   }),
             ]),
           )
@@ -149,7 +149,7 @@ void joinGame(BuildContext context) async {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  // MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -160,7 +160,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  // final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -183,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(''),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it

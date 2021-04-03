@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<String> asyncInputDialog(BuildContext context) async {
+asyncInputDialog(BuildContext context) async {
   String teamName = '';
   return showDialog<String>(
     context: context,

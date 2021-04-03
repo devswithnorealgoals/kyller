@@ -19,9 +19,9 @@ class _NameGameState extends State<NameGame> {
   bool _includeCustomMissions = false;
   bool _creating = false;
 
-  void _counterKillChanged(bool value) =>
+  void _counterKillChanged(value) =>
       setState(() => _includeCounterKill = value);
-  void _customMissionsChanged(bool value) =>
+  void _customMissionsChanged(value) =>
       setState(() => _includeCustomMissions = value);
 
   @override
@@ -143,7 +143,7 @@ class _NameGameState extends State<NameGame> {
             ),
           ])));
 
-          var l = [];
+          List<Widget> l = [];
           l.add(center);
           if (_creating == true) {
             var modal = new Stack(

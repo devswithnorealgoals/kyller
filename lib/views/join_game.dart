@@ -19,8 +19,8 @@ class _JoinGameState extends State<JoinGame> {
       _gameId = instance.getString('currentGameId') ?? null;
       if (_gameId != null) {
         getGameInfos(_gameId).get().then((game) {
-          print(game.data["players"]);
-          _players = game.data["players"];
+          print(game.data()?["players"]);
+          _players = game.data()?["players"];
           setState(() {});
         });
       }
@@ -147,13 +147,13 @@ goToCurrentGame(player, context) {
 }
 
 setGame(gameName) async {
-  var games = (await getGameInfosByName(gameName)).documents;
+  var games = (await getGameInfosByName(gameName)).docs;
   if (games.length == 0) {
     print('Not found');
     return false;
   } else {
-    return (await setGameId(games[0].documentID)) == true
-        ? {'id': games[0].documentID, 'players': games[0].data['players']}
+    return (await setGameId(games[0].id)) == true
+        ? {'id': games[0].id, 'players': games[0].data()?['players']}
         : false;
   }
 }

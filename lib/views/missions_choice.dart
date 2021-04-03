@@ -15,7 +15,7 @@ class MissionsChoice extends StatefulWidget {
 
 class _MissionsChoiceState extends State<MissionsChoice> {
   List<MissionListItem> _missions = [];
-  String _missionTyped;
+  String _missionTyped = '';
   final _textFieldController = new TextEditingController();
   bool _creating = false;
 
@@ -96,7 +96,7 @@ class _MissionsChoiceState extends State<MissionsChoice> {
                         setState(() {
                           _creating = true;
                         });
-                        var missions = _missions.map((m) => m.name);
+                        var missions = _missions.map((m) => m.name).toList();
                         var additionalMissions = await randomMissions(
                             widget.players.length - _missions.length);
                         missions = new List.from(missions)
@@ -123,7 +123,7 @@ class _MissionsChoiceState extends State<MissionsChoice> {
               ],
             ),
           ));
-          var l = [];
+          List<Widget> l = [];
           l.add(center);
           if (_creating == true) {
             var modal = new Stack(

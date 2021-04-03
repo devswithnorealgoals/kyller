@@ -22,9 +22,9 @@ class _CurrentGameState extends State<CurrentGame> {
   void initState() {
     super.initState();
 
-    get('https://kyller-web.herokuapp.com').then((result) {
-      print('ok');
-    });
+    // get('https://kyller-web.herokuapp.com').then((result) {
+    //   print('ok');
+    // });
 
     SharedPreferences.getInstance().then((instance) async {
       print(instance.getString('currentGameId'));
@@ -32,9 +32,9 @@ class _CurrentGameState extends State<CurrentGame> {
       _currentPlayerName = instance.getString('currentPlayer') ?? null;
       getGameSnapshot(_currentGameId).listen((doc) {
         if (doc.exists) {
-          _currentPlayers = doc.data['players'];
-          _currentGameName = doc.data['name'];
-          _currentGameCounterKillStatus = doc.data['counter_kill'];
+          _currentPlayers = doc.data()?['players'];
+          _currentGameName = doc.data()?['name'];
+          _currentGameCounterKillStatus = doc.data()?['counter_kill'];
           print(_currentGameCounterKillStatus);
           _currentPlayers.sort((a, b) {
             // print(b['kills'].compareTo(a['kills']) is int); // WHY GOD WHY ???

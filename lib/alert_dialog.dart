@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<bool> asyncAlertialog(String question, BuildContext context) async {
+asyncAlertialog(String question, BuildContext context) async {
   return showDialog<bool>(
     context: context,
     barrierDismissible: true, // dialog is dismissible with a tap on the barrier
