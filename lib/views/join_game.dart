@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kyller/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../alert_dialog.dart';
 import '../services/db_helpers.dart';
@@ -53,32 +54,26 @@ class _JoinGameState extends State<JoinGame> {
                     },
                   ),
                   Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: new TextButton(
-                          child: new Text(
-                            'OK',
-                            style: TextStyle(
-                                fontFamily: 'gunplay', fontSize: 20.0),
-                          ),
-                          onPressed: () {
-                            setGame(_gameName).then((game) async {
-                              print(game);
-                              print('game');
-                              if (game == false) {
-                                final snackBar = SnackBar(
-                                  content:
-                                      Text('Impossible de trouver la partie !'),
-                                );
-                                ScaffoldMessenger.of(builderContext)
-                                    .showSnackBar(snackBar);
-                                print('error trying to set game');
-                              } else {
-                                _gameId = game['id'];
-                                _players = game['players'];
-                                setState(() {});
-                              }
-                            });
-                          }))
+                    padding: EdgeInsets.only(top: 40.0),
+                    child: getButton('OK', () {
+                      setGame(_gameName).then((game) async {
+                        print(game);
+                        print('game');
+                        if (game == false) {
+                          final snackBar = SnackBar(
+                            content: Text('Impossible de trouver la partie !'),
+                          );
+                          ScaffoldMessenger.of(builderContext)
+                              .showSnackBar(snackBar);
+                          print('error trying to set game');
+                        } else {
+                          _gameId = game['id'];
+                          _players = game['players'];
+                          setState(() {});
+                        }
+                      });
+                    }),
+                  )
                 ])),
           ));
     } else {
@@ -147,13 +142,13 @@ goToCurrentGame(player, context) {
 }
 
 setGame(gameName) async {
-  var games = (await getGameInfosByName(gameName)).docs;
+  var games = (await getGameInfosByName(gameName?.trim())).docs;
   if (games.length == 0) {
     print('Not found');
     return false;
   } else {
     return (await setGameId(games[0].id)) == true
-        ? {'id': games[0].id, 'players': games[0].data()?['players']}
+        ? {'id': games[0].id, 'players': games[0].data()['players']}
         : false;
   }
 }

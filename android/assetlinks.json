@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.tipshack.tipshack",
+    "sha256_cert_fingerprints":
+    ["8A:B0:F6:14:B1:30:DB:B9:16:F1:14:63:71:C8:96:B2:29:67:D7:4C:71:2E:28:05:63:EE:81:4B:9F:59:E7:29"]
+  }
+}]

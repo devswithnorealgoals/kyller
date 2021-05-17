@@ -4,15 +4,16 @@ Future<QuerySnapshot> getGames() {
   return FirebaseFirestore.instance.collection('games').get();
 }
 
-DocumentReference getGameInfos(String docId) {
+DocumentReference<Map<String, dynamic>> getGameInfos(String docId) {
   return FirebaseFirestore.instance.collection('games').doc(docId);
 }
 
-Stream<DocumentSnapshot> getGameSnapshot(String docId) {
+Stream<DocumentSnapshot<Map<String, dynamic>>> getGameSnapshot(String docId) {
   return FirebaseFirestore.instance.collection('games').doc(docId).snapshots();
 }
 
-Future<QuerySnapshot> getGameInfosByName(String gameName) async {
+Future<QuerySnapshot<Map<String, dynamic>>> getGameInfosByName(
+    String gameName) async {
   return FirebaseFirestore.instance
       .collection('games')
       .where('name', isEqualTo: gameName)
@@ -25,6 +26,6 @@ Future<DocumentReference> addGame(List players, String name) {
       .add({"name": name, "players": players});
 }
 
-Future<QuerySnapshot> getMissions() {
+Future<QuerySnapshot<Map<String, dynamic>>> getMissions() {
   return FirebaseFirestore.instance.collection('missions').get();
 }

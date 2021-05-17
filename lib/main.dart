@@ -4,8 +4,40 @@ import './views/new_game.dart';
 import './views/join_game.dart';
 import './views/current_game.dart';
 import './services/preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'dart:math' as math;
 
-void main() => runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class Mission {
+  Mission(this.context, this.difficulty, this.mission, this.missionType,
+      this.origin);
+  final String context;
+  final String difficulty;
+  final String mission;
+  final String missionType;
+  final String origin;
+}
+
+class Player {
+  Player(this.killed, this.kills, this.mission, this.name, this.toKill);
+  final bool killed;
+  final int kills;
+  final String mission;
+  final String name;
+  final String toKill;
+}
+
+class Game {
+  Game(this.counterKill, this.name, this.players);
+  final bool counterKill;
+  final String name;
+  final List<Player> players;
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -20,6 +52,43 @@ class MyApp extends StatelessWidget {
   }
 }
 
+Transform getButton(String text, void Function() onPressed,
+    [String style = 'primary']) {
+  Color color = Colors.black;
+  Color bgColor = Colors.white;
+  switch (style) {
+    case 'primary':
+      color = Colors.black;
+      bgColor = Colors.amber;
+      break;
+    case 'disabled':
+      color = Colors.grey;
+      bgColor = Colors.white;
+      break;
+    case 'secondary':
+      color = Colors.black;
+      bgColor = Colors.white;
+      break;
+    default:
+      color = Colors.black;
+      bgColor = Colors.white;
+  }
+  return Transform.rotate(
+      angle: -10 * math.pi / 180,
+      child: new TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: bgColor,
+            padding: EdgeInsets.only(
+                right: 30.0, left: 30.0, top: 10.0, bottom: 10.0),
+          ),
+          child: new Text(
+            text,
+            style:
+                TextStyle(fontFamily: 'gunplay', color: color, fontSize: 20.0),
+          ),
+          onPressed: onPressed));
+}
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -29,7 +98,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   var animationController;
   @override
   void initState() {
-    super.initState();
     animationController = new AnimationController(
       vsync: this,
       duration: new Duration(seconds: 15),
@@ -37,6 +105,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     print(animationController);
     animationController.repeat();
+    super.initState();
   }
 
   @override
@@ -62,67 +131,48 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               style: TextStyle(fontFamily: 'gunplay3d', fontSize: 50.0),
             ),
           ),
-          AnimatedBuilder(
-              animation: animationController,
-              child: Container(
-                child: Image.asset(
-                  'assets/images/target.png',
-                  width: MediaQuery.of(context).size.width / 2,
-                ),
-              ),
-              builder: (BuildContext context, Widget? _widget) {
-                return new Transform.rotate(
-                  angle: animationController.value * 6.3,
-                  // child: _widget,
-                );
-              }),
+          RotationTransition(
+            turns: Tween(begin: 0.0, end: 1.0).animate(animationController),
+            child: Image.asset(
+              'assets/images/target.png',
+              width: MediaQuery.of(context).size.width / 2,
+            ),
+          ),
           Container(
             child: Column(children: [
-              TextButton(
-                  child: Text(
-                    'NOUVEAU JEU',
-                    style: TextStyle(
-                        fontSize: 28.0,
-                        fontFamily: 'gunplay',
-                        color: Color(0xffF1D302)),
-                  ),
-                  // highlightColor: Colors.amberAccent,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => NewGame()),
-                    );
+              getButton('NOUVEAU JEU', () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewGame()),
+                );
+              }),
+              SizedBox(
+                height: 20.0,
+              ),
+              FutureBuilder(
+                  future: getGameId(),
+                  builder: (context, snapshot) {
+                    var game = snapshot.data;
+                    return game == null
+                        ? getButton('REJOINDRE', () {
+                            joinGame(context);
+                          })
+                        : getButton('PARTIE EN COURS', () {
+                            joinGame(context);
+                          });
                   }),
-              TextButton(
-                  onPressed: () {
-                    joinGame(context);
-                  },
-                  child: FutureBuilder(
-                      future: getGameId(),
-                      builder: (context, snapshot) {
-                        var game = snapshot.data;
-                        return game == null
-                            ? Text('REJOINDRE',
-                                style: TextStyle(
-                                    fontSize: 28.0, fontFamily: 'gunplay'))
-                            : Text('PARTIE EN COURS',
-                                style: TextStyle(
-                                    fontSize: 28.0, fontFamily: 'gunplay'));
-                      })),
+              SizedBox(
+                height: 20.0,
+              ),
               FutureBuilder(
                   future: getGameId(),
                   builder: (context, snapshot) {
                     return snapshot.data != null
-                        ? TextButton(
-                            onPressed: () async {
-                              var inst = await SharedPreferences.getInstance();
-                              inst.clear();
-                              setState(() {});
-                            },
-                            child: Text('QUITTER',
-                                style: TextStyle(
-                                    fontSize: 28.0, fontFamily: 'gunplay')),
-                          )
+                        ? getButton('QUITTER LA PARTIE', () async {
+                            var inst = await SharedPreferences.getInstance();
+                            inst.clear();
+                            setState(() {});
+                          }, 'secondary')
                         : Text('');
                   }),
             ]),

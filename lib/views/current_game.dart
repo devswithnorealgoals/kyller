@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:kyller/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
 import '../services/functions_helpers.dart';
 import '../services/db_helpers.dart';
-import 'package:http/http.dart';
 import './rankings.dart';
 
 class CurrentGame extends StatefulWidget {
@@ -47,6 +47,7 @@ class _CurrentGameState extends State<CurrentGame> {
             if (a['kills'] == b['kills']) {
               return 0;
             }
+            return 0;
           });
           _currentPlayer = _currentPlayers
               .where((player) => player['name'] == _currentPlayerName)
@@ -82,14 +83,18 @@ class _CurrentGameState extends State<CurrentGame> {
                             style: TextStyle(
                                 fontFamily: 'courier', fontSize: 20.0),
                           ),
-                          new TextButton(
-                              child: Text('MENU',
-                                  style: TextStyle(
-                                      fontFamily: 'gunplay', fontSize: 32.0)),
-                              onPressed: () {
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, '/', (_) => false);
-                              })
+                          getButton('MENU', () {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/', (_) => false);
+                          }, 'secondary')
+                          // new TextButton(
+                          //     child: Text('MENU',
+                          //         style: TextStyle(
+                          //             fontFamily: 'gunplay', fontSize: 32.0)),
+                          //     onPressed: () {
+                          //       Navigator.pushNamedAndRemoveUntil(
+                          //           context, '/', (_) => false);
+                          //     })
                         ])))),
         Scaffold(body: Rankings(_currentPlayers))
       ]);
@@ -105,15 +110,9 @@ class _CurrentGameState extends State<CurrentGame> {
                   'Vous avez été tué !',
                   style: TextStyle(fontFamily: 'courier', fontSize: 20.0),
                 ),
-                new TextButton(
-                    // color: Colors.amber,
-                    child: Text('MENU',
-                        style:
-                            TextStyle(fontFamily: 'gunplay', fontSize: 32.0)),
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/', (_) => false);
-                    })
+                getButton('MENU', () {
+                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                }, 'secondary')
               ]),
         )),
         Scaffold(
@@ -258,17 +257,20 @@ class _CurrentGameState extends State<CurrentGame> {
               alignment: Alignment(0, 0.8),
             ),
             Container(
-              alignment: Alignment(0, 0.95),
-              child: new TextButton(
-                  child: Text(
-                    'MENU',
-                    style: TextStyle(fontFamily: 'gunplay', fontSize: 24.0),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/', (_) => false);
-                  }),
-            )
+                alignment: Alignment(0, 0.95),
+                child: getButton('MENU', () {
+                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                }, 'secondary')
+                // new TextButton(
+                //     child: Text(
+                //       'MENU',
+                //       style: TextStyle(fontFamily: 'gunplay', fontSize: 24.0),
+                //     ),
+                //     onPressed: () {
+                //       Navigator.pushNamedAndRemoveUntil(
+                //           context, '/', (_) => false);
+                //     }),
+                )
           ],
         )),
         Scaffold(body: Rankings(_currentPlayers))

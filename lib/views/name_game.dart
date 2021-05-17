@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kyller/main.dart';
 import '../services/functions_helpers.dart';
 import '../services/utils.dart';
 import '../services/preferences.dart';
@@ -26,6 +27,81 @@ class _NameGameState extends State<NameGame> {
 
   @override
   Widget build(BuildContext context) {
+    var start = (builderContext) {
+      return () async {
+        print('enculé');
+        if (_gameNameController.text == '') {
+          ScaffoldMessenger.of(builderContext).showSnackBar(SnackBar(
+            content: Text('Donnez un nom à cette partie.'),
+            duration: Duration(seconds: 1),
+          ));
+          return;
+        }
+        print('va vien');
+        print(_includeCustomMissions);
+        if (_includeCustomMissions == false) {
+          var missions = await randomMissions(widget.players.length);
+          setState(() {
+            _creating = true;
+          });
+          try {
+            dynamic game = await createGame(_gameNameController.text.trim(),
+                widget.players, missions, _includeCounterKill);
+            print('SUCCESS !');
+            print(game.data);
+
+            if (game.data["result"] != null) {
+              setState(() {
+                _creating = false;
+              });
+              navigateToGame(game.data["result"], context);
+            } else {
+              setState(() {
+                _creating = false;
+              });
+              final snackBar = SnackBar(
+                content: Text('Ce nom est déjà pris !'),
+                duration: Duration(seconds: 1),
+              );
+              // Find the Scaffold in the Widget tree and use it to show a SnackBar!
+              ScaffoldMessenger.of(builderContext).showSnackBar(snackBar);
+            }
+          } catch (e) {
+            print('Une erreur est survenue');
+            print(e);
+          }
+        } else {
+          print('oui');
+          setState(() {
+            _creating = true;
+          });
+          var exists = await testName(_gameNameController.text);
+          print(exists);
+          setState(() {
+            _creating = false;
+          });
+          if (exists["error"] == 'already_exists') {
+            final snackBar = SnackBar(
+              content: Text('Ce nom est déjà pris !'),
+              duration: Duration(seconds: 1),
+            );
+            // Find the Scaffold in the Widget tree and use it to show a SnackBar!
+            ScaffoldMessenger.of(builderContext).showSnackBar(snackBar);
+          } else if (exists["status"] == 'ok') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MissionsChoice(widget.players,
+                      _includeCounterKill, _gameNameController.text)),
+            );
+          } else {
+            print('unknown response no error');
+            print(exists);
+          }
+        }
+      };
+    };
+
     return Scaffold(
         appBar: AppBar(
           title: Text("PARAMÈTRES",
@@ -74,71 +150,7 @@ class _NameGameState extends State<NameGame> {
               activeColor: Colors.amber,
             ),
             Padding(
-              child: TextButton(
-                  child: Text(
-                    'START !',
-                    style: TextStyle(fontFamily: 'gunplay', fontSize: 24.0),
-                  ),
-                  onPressed: () async {
-                    if (_gameNameController.text == '') {
-                      return;
-                    }
-                    if (_includeCustomMissions == false) {
-                      var missions =
-                          await randomMissions(widget.players.length);
-                      setState(() {
-                        _creating = true;
-                      });
-                      var game = await createGame(_gameNameController.text,
-                          widget.players, missions, _includeCounterKill);
-                      if (game["result"] != null) {
-                        setState(() {
-                          _creating = false;
-                        });
-                        navigateToGame(game["result"], context);
-                      } else {
-                        setState(() {
-                          _creating = false;
-                        });
-                        final snackBar = SnackBar(
-                          content: Text('Ce nom est déjà pris !'),
-                          duration: Duration(seconds: 1),
-                        );
-                        // Find the Scaffold in the Widget tree and use it to show a SnackBar!
-                        ScaffoldMessenger.of(builderContext)
-                            .showSnackBar(snackBar);
-                      }
-                    } else {
-                      setState(() {
-                        _creating = true;
-                      });
-                      var exists = await testName(_gameNameController.text);
-                      setState(() {
-                        _creating = false;
-                      });
-                      if (exists["error"] == 'already_exists') {
-                        final snackBar = SnackBar(
-                          content: Text('Ce nom est déjà pris !'),
-                          duration: Duration(seconds: 1),
-                        );
-                        // Find the Scaffold in the Widget tree and use it to show a SnackBar!
-                        ScaffoldMessenger.of(builderContext)
-                            .showSnackBar(snackBar);
-                      } else if (exists["status"] == 'ok') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MissionsChoice(
-                                  widget.players,
-                                  _includeCounterKill,
-                                  _gameNameController.text)),
-                        );
-                      } else {
-                        print('unknown response no error');
-                        print(exists);
-                      }
-                    }
-                  }),
+              child: getButton('START', start(builderContext)),
               padding: EdgeInsets.all(40),
             ),
           ])));

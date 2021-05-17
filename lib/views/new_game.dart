@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kyller/main.dart';
 import '../prompt_dialog.dart';
 import './name_game.dart';
 import 'dart:math';
@@ -27,44 +28,52 @@ class _NewGameState extends State<NewGame> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            ElevatedButton(
-                                child: Icon(Icons.add),
-                                // Text(
-                                //   '+',
-                                //   style: TextStyle(
-                                //       fontSize: 20.0, fontFamily: 'gunplay'),
-                                // ),
-                                onPressed: () {
-                                  _addPlayer(context);
-                                }),
-                            TextButton(
-                                child: Text(
-                                  'SUIVANT',
-                                  style: TextStyle(
-                                      fontFamily: 'gunplay', fontSize: 24.0),
-                                ),
-                                onPressed: () {
-                                  if (_players.length < 2) {
-                                    final snackBar = SnackBar(
-                                      content:
-                                          Text('Il faut au moins 2 joueurs !'),
-                                      duration: Duration(seconds: 1),
-                                    );
-                                    ScaffoldMessenger.of(builderContext)
-                                        .showSnackBar(snackBar);
-                                  } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => NameGame(
-                                              _players
-                                                  .map((p) => p.name)
-                                                  .toList())),
-                                    );
-                                  }
-                                })
+                            getButton('AJOUTER UN JOUEUR', () {
+                              _addPlayer(context);
+                            }),
+                            _players.length < 2
+                                ? getButton('SUIVANT', () {
+                                    if (_players.length < 2) {
+                                      final snackBar = SnackBar(
+                                        content: Text(
+                                            'Il faut au moins 2 joueurs !'),
+                                        duration: Duration(seconds: 1),
+                                      );
+                                      ScaffoldMessenger.of(builderContext)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => NameGame(
+                                                _players
+                                                    .map((p) => p.name)
+                                                    .toList())),
+                                      );
+                                    }
+                                  }, 'disabled')
+                                : getButton('SUIVANT', () {
+                                    if (_players.length < 2) {
+                                      final snackBar = SnackBar(
+                                        content: Text(
+                                            'Il faut au moins 2 joueurs !'),
+                                        duration: Duration(seconds: 1),
+                                      );
+                                      ScaffoldMessenger.of(builderContext)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => NameGame(
+                                                _players
+                                                    .map((p) => p.name)
+                                                    .toList())),
+                                      );
+                                    }
+                                  }, 'primary')
                           ]),
-                      padding: EdgeInsets.only(top: 16.0)),
+                      padding: EdgeInsets.only(top: 50.0)),
                   Expanded(
                       child: Padding(
                     child: ListView.separated(
@@ -78,7 +87,7 @@ class _NewGameState extends State<NewGame> {
                       itemCount: _players.length,
                       itemBuilder: (context, index) => this._buildRow(index),
                     ),
-                    padding: EdgeInsets.only(top: 26.0),
+                    padding: EdgeInsets.only(top: 36.0),
                   ))
                 ]))));
   }
@@ -92,6 +101,9 @@ class _NewGameState extends State<NewGame> {
   void checkIfExistsAndAddPlayer(name, context) {
     if (_players.where((player) => player.key == new Key(name)).length > 0) {
       _addPlayer(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Le joueur existe déjà.'),
+      ));
     } else if (name == "" || name == null) {
     } else {
       setState(() {
